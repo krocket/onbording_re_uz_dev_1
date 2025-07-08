@@ -6,6 +6,7 @@
 
     <record id="category_non_fiction" model="library.book.category">
         <field name="name">Non Fiction</field>
+        <field name="parent_id" ref="category_fiction"/>
     </record>
 
     <record id="category_comics" model="library.book.category">
@@ -30,6 +31,7 @@
 
     <record id="category_mystery" model="library.book.category">
         <field name="name">Mystery</field>
+        <field name="parent_id" ref="category_horror"/>
     </record>
 
     <record id="category_romance" model="library.book.category">
