@@ -7,9 +7,11 @@
         <field name="arch" type="xml">
             <form string="Category">
                 <sheet>
-                    <field name="name"/>
-                    <field name="parent_id" widget="many2one_tags"/>
-                    <field name="child_ids" widget="many2many_tags"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="parent_id" widget="many2one_tags"/>
+                        <field name="child_ids" widget="many2many_tags"/>
+                    </group>
                 </sheet>
             </form>
         </field>
@@ -22,6 +24,16 @@
             <list>
                 <field name="name"/>
             </list>
+        </field>
+    </record>
+
+    <record id="view_category_search" model="ir.ui.view">
+        <field name="name">library.book.category.search</field>
+        <field name="model">library.book.category</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
         </field>
     </record>
 
