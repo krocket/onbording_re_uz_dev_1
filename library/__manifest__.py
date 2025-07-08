@@ -18,6 +18,8 @@
         'data/categories.xml',
         'data/authors.xml',
         'data/publisher.xml',
+        'security/library_security.xml',
+        'security/ir.model.access.csv',
     ],
     'installable': True,
     'application': True,
