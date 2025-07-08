@@ -16,7 +16,7 @@
                             <field name="publication_date"/>
                             <field name="isbn"/>
                             <field name="publisher_id"/>
-                            <field name="author_ids"/>
+                            <field name="author_ids" widget="many2many_tags"/>
                         </group>
                         <group>
                             <separator string="Etat"/>
@@ -28,6 +28,20 @@
                     </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="view_book_list" model="ir.ui.view">
+        <field name="name">library.book.list</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="image" widget="image"/>
+                <field name="name"/>
+                <field name="state"/>
+                <field name="author_ids" widget="many2many_tags"/>
+                <field name="publisher_id" optional="hide"/>
+            </list>
         </field>
     </record>
 </odoo>
