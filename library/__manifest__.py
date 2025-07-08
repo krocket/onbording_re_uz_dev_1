@@ -9,7 +9,9 @@
     'author': 'Coco',
     'license': 'LGPL-3',
     'depends': [],
-    'data': [],
+    'data': [
+        'views/library_menu.xml',
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,
