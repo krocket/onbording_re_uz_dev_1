@@ -40,8 +40,27 @@
                 <field name="name"/>
                 <field name="state"/>
                 <field name="author_ids" widget="many2many_tags"/>
+                <field name="publication_date" widget="date" optional="hide"/>
                 <field name="publisher_id" optional="hide"/>
             </list>
         </field>
     </record>
+
+    <record id="view_book_search" model="ir.ui.view">
+        <field name="name">library.book.search</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="filter_state_available" string="State Available" domain="[('state', '=', 'available')]"/>
+                <filter name="filter_state_borrowed" string="State Borrowed" domain="[('state', '=', 'borrowed')]"/>
+                <filter name="filter_state_lost" string="State Lost" domain="[('state', '=', 'lost')]"/>
+                <group expand="1" string="Group By">
+                    <field string="Authors" name="author_ids" context="{'group_by': 'author_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
 </odoo>
