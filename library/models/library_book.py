@@ -15,3 +15,4 @@ class LibraryBook(models.Model):
     return_date = fields.Date(string='Return Date')
     active = fields.Boolean(string='Active', default=True)
     image = fields.Binary(string='Image')
+    category_id = fields.Many2one('library.book.category', string='Category')
