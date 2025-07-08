@@ -54,9 +54,11 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
+                <field name="category_id"/>
                 <filter name="filter_state_available" string="State Available" domain="[('state', '=', 'available')]"/>
                 <filter name="filter_state_borrowed" string="State Borrowed" domain="[('state', '=', 'borrowed')]"/>
                 <filter name="filter_state_lost" string="State Lost" domain="[('state', '=', 'lost')]"/>
+                <filter name="filter_category_child_of" string="Category (including subcategories)" domain="[('category_id', 'child_of', category_id)]"/>
                 <group expand="1" string="Group By">
                     <field string="Authors" name="author_ids" context="{'group_by': 'author_ids'}"/>
                 </group>
