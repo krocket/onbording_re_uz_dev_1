@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="publisher_penguin" model="library.publisher">
+        <field name="name">Penguin Random House</field>
+        <field name="description">Penguin Random House is a publishing company that was founded in 1924.</field>
+        <field name="founded_date">1924-01-01</field>
+        <field name="email">info@penguinrandomhouse.com</field>
+        <field name="phone">+1234567890</field>
+        <field name="address">123 Main St, Anytown, USA</field>
+        <field name="logo" type="base64" file="library/static/img/penguin.png"/>
+    </record>
+</odoo>

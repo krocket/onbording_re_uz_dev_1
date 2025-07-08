@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="author_jane_austen" model="library.author">
+        <field name="name">Jane Austen</field>
+        <field name="first_name">Jane</field>
+        <field name="last_name">Austen</field>
+        <field name="biography">Jane Austen was an English novelist whose works of fiction explore the life of the landed gentry of the British Regency.</field>
+        <field name="birth_date">1775-12-16</field>
+        <field name="death_date">1817-07-18</field>
+        <field name="nationality">English</field>
+        <field name="email">jane.austen@example.com</field>
+        <field name="phone">+1234567890</field>
+        <field name="address">123 Main St, Anytown, USA</field>
+    </record>
+
+    <record id="author_charles_dickens" model="library.author">
+        <field name="name">Charles Dickens</field>
+        <field name="first_name">Charles</field>
+        <field name="last_name">Dickens</field>
+        <field name="biography">Charles Dickens was an English novelist whose works of fiction explore the life of the landed gentry of the British Regency.</field>
+        <field name="birth_date">1812-02-07</field>
+        <field name="death_date">1870-06-09</field>
+        <field name="nationality">English</field>
+        <field name="phone">+1234567890</field>
+        <field name="address">123 Main St, Anytown, USA</field>
+    </record>
+    
+    
+</odoo>

@@ -5,8 +5,8 @@ class LibraryBook(models.Model):
     _description = 'Books'
 
     name = fields.Char(string='Title', required=True)
-    publisher_id = fields.Many2one('res.partner', string='Publisher')
-    author_ids = fields.Many2many('res.partner', string='Authors')
+    publisher_id = fields.Many2one('library.publisher', string='Publisher')
+    author_ids = fields.Many2many('library.author', string='Authors')
     description = fields.Text(string='Description')
     publication_date = fields.Date(string='Publication Date')
     isbn = fields.Char(string='ISBN')
@@ -16,3 +16,5 @@ class LibraryBook(models.Model):
     active = fields.Boolean(string='Active', default=True)
     image = fields.Binary(string='Image')
     category_id = fields.Many2one('library.book.category', string='Category')
+    reference = fields.Char(string='Reference')
+
