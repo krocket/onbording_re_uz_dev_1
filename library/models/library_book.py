@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+fix:from odoo import models, fields, api
 
 class LibraryBook(models.Model):
     _name = 'library.book'
@@ -32,7 +32,7 @@ class LibraryBook(models.Model):
         return self._search(domain + args, limit=limit)
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False):
+    def _search(self, args, offset=0, limit=None, order=None):
         # Si on recherche par catégorie, inclure les catégories enfants
         for i, arg in enumerate(args):
             if isinstance(arg, (list, tuple)) and len(arg) == 3:
@@ -40,5 +40,5 @@ class LibraryBook(models.Model):
                 if field == 'category_id' and operator == '=':
                     # Remplacer par une recherche qui inclut les enfants
                     args[i] = ('category_id', 'child_of', value)
-        return super()._search(args, offset=offset, limit=limit, order=order, count=count)
+        return super()._search(args, offset=offset, limit=limit, order=order)
 
