@@ -1,6 +1,6 @@
 {
     'name': 'Gestion de Bibliothèque',
-    'version': '17.0.1.0',
+    'version': '18.0.1.0',
     'category': 'Education',
     'summary': 'Module de gestion de bibliothèque pour Odoo',
     'description': """
