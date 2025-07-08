@@ -19,7 +19,4 @@ class LibraryAuthor(models.Model):
     active = fields.Boolean(string='Active', default=True)
     image = fields.Binary(string='Photo')
     
-    # Relations
-    book_ids = fields.One2many('library.book', 'author_id', string='Books')
-    book_count = fields.Integer(string='Number of Books', compute='_compute_book_count')
-    
+ 
