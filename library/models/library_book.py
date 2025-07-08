@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 class LibraryBook(models.Model):
     _name = 'library.book'
@@ -17,4 +17,28 @@ class LibraryBook(models.Model):
     image = fields.Binary(string='Image')
     category_id = fields.Many2one('library.book.category', string='Category')
     reference = fields.Char(string='Reference')
+
+    @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', '|', '|', '|',
+                     ('name', operator, name),
+                     ('description', operator, name),
+                     ('isbn', operator, name),
+                     ('reference', operator, name),
+                     ('category_id.name', operator, name)]
+        return self._search(domain + args, limit=limit)
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False):
+        # Si on recherche par catégorie, inclure les catégories enfants
+        for i, arg in enumerate(args):
+            if isinstance(arg, (list, tuple)) and len(arg) == 3:
+                field, operator, value = arg
+                if field == 'category_id' and operator == '=':
+                    # Remplacer par une recherche qui inclut les enfants
+                    args[i] = ('category_id', 'child_of', value)
+        return super()._search(args, offset=offset, limit=limit, order=order, count=count)
 
