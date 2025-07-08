@@ -5,7 +5,8 @@ class LibraryBook(models.Model):
     _description = 'Books'
 
     name = fields.Char(string='Title', required=True)
-    author_id = fields.Many2one('res.partner', string='Author')
+    publisher_id = fields.Many2one('res.partner', string='Publisher')
+    author_ids = fields.Many2many('res.partner', string='Authors')
     description = fields.Text(string='Description')
     publication_date = fields.Date(string='Publication Date')
     isbn = fields.Char(string='ISBN')
