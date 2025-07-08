@@ -7,6 +7,5 @@
         <field name="email">info@penguinrandomhouse.com</field>
         <field name="phone">+1234567890</field>
         <field name="address">123 Main St, Anytown, USA</field>
-        <field name="logo" type="base64" file="library/static/img/penguin.png"/>
     </record>
 </odoo>
