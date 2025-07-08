@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="category_fiction" model="library.book.category">
+        <field name="name">Fiction</field>
+    </record>
+
+    <record id="category_non_fiction" model="library.book.category">
+        <field name="name">Non Fiction</field>
+    </record>
+
+    <record id="category_comics" model="library.book.category">
+        <field name="name">Comics</field>
+    </record>
+
+    <record id="category_children" model="library.book.category">
+        <field name="name">Children</field>
+    </record>
+
+    <record id="category_science_fiction" model="library.book.category">
+        <field name="name">Science Fiction</field>
+    </record>
+
+    <record id="category_fantasy" model="library.book.category"> 
+        <field name="name">Fantasy</field>
+    </record>
+
+    <record id="category_horror" model="library.book.category">
+        <field name="name">Horror</field>
+    </record>
+
+    <record id="category_mystery" model="library.book.category">
+        <field name="name">Mystery</field>
+    </record>
+
+    <record id="category_romance" model="library.book.category">
+        <field name="name">Romance</field>
+    </record>
+
+    <record id="category_thriller" model="library.book.category">
+        <field name="name">Thriller</field>
+    </record>
+    
+</odoo>

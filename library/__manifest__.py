@@ -13,6 +13,7 @@
         'views/library_menu.xml',
         'views/book_view.xml',
         'views/category_view.xml',
+        'data/categories.xml',
     ],
     'installable': True,
     'application': True,
