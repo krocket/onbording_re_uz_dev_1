@@ -16,5 +16,5 @@ class ProductTemplate(models.Model):
     @api.depends('product_format', 'volume', 'base', 'color', 'technology')
     def _compute_api_reference(self):
         for record in self:
-            record.api_reference = f"{record.product_format} {record.volume} {record.base} {record.color} {record.technology}"
+            record.api_reference = f"{record.product_format or ''}{record.volume or ''}{record.base or ''}{record.color or ''}{record.technology or '' }"
       
