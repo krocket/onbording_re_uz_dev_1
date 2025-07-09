@@ -38,7 +38,7 @@
         <field name="inherit_id" ref="product.product_template_kanban_view"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@class='d-flex mb-0 h5']" position="replace">
-                <div class="d-flex flex-column">
+                <div class="d-flex flex-column mb-0 h5">
                     <field name="name"/>
                     <span>API Ref: <field name="api_reference"/></span>
                 </div>
