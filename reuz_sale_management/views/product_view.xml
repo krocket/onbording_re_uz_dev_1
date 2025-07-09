@@ -8,12 +8,12 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='internal_notes']" position="before">
                 <group name="reuz_fields" string="Reuz Fields">
-                    <field name="reuz_product_format" />
-                    <field name="reuz_product_volume" />
-                    <field name="reuz_product_base" />
-                    <field name="reuz_product_color" />
-                    <field name="reuz_product_technology" />
-                    <field name="reuz_api_reference" readonly="1" />
+                    <field name="product_format" />
+                    <field name="product_volume" />
+                    <field name="product_base" />
+                    <field name="product_color" />
+                    <field name="product_technology" />
+                    <field name="api_reference" readonly="1" />
                     <field name="silver_reference" />
                 </group>
             </xpath>
@@ -26,7 +26,7 @@
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="reuz_api_reference" />
+                <field name="api_reference" />
                 <field name="silver_reference" />
             </xpath>
         </field>
@@ -40,7 +40,7 @@
             <xpath expr="//div[@class='d-flex mb-0 h5']" position="inside">
                 <div class="d-flex flex-column">
                     <field name="name"/>
-                    <span>API Ref: <field name="reuz_api_reference"/></span>
+                    <span>API Ref: <field name="api_reference"/></span>
                 </div>
             </xpath>
         </field>
