@@ -25,12 +25,10 @@ class LibraryBook(models.Model):
     @api.constrains('isbn')
     def _check_isbn_constraint(self):
         for record in self:
-            if record.isbn:
-                try:
-                    record.button_check_isbn()
-                except UserError as e:
-                    raise UserError(str(e))
+            if record.isbn and not record._check_isbn():
+                raise UserError(f"L'ISBN '{record.isbn}' n'est pas valide. Veuillez corriger l'ISBN avant de sauvegarder.")
 
+        
     def _check_isbn(self):
         self.ensure_one()
         digits = [int(d) for d in self.isbn if d.isdigit()]
