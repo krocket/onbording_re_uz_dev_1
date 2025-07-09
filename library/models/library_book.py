@@ -24,9 +24,12 @@ class LibraryBook(models.Model):
    
     @api.constrains('isbn')
     def _check_isbn_constraint(self):
-        self.button_check_isbn()
+        for record in self:
+            if record.isbn and not record._check_isbn():
+                # On lève une exception pour bloquer la sauvegarde
+                # mais on peut aussi afficher une notification
+                raise UserError(f"ISBN '{record.isbn}' not valid. Please correct the ISBN before saving.")
                 
-
         
     def _check_isbn(self):
         self.ensure_one()
@@ -39,9 +42,27 @@ class LibraryBook(models.Model):
     def button_check_isbn(self):
         for book in self:
             if not book.isbn:
-                raise UserError("ISBN is required")
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': 'Erreur ISBN',
+                        'message': 'ISBN is required',
+                        'type': 'danger',
+                        'sticky': False,
+                    }
+                }
             if book.isbn and not book._check_isbn():
-                raise UserError(f"ISBN '{book.isbn}' not valid. Please correct the ISBN before saving.")
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': 'Erreur ISBN',
+                        'message': f'ISBN "{book.isbn}" not valid. Please correct the ISBN before saving.',
+                        'type': 'danger',
+                        'sticky': False,
+                    }
+                }
             if book.isbn and book._check_isbn():
                 return {
                     'type': 'ir.actions.client',
