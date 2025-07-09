@@ -10,6 +10,11 @@
                 <field name="price" />
                 <field name="language" />
             </xpath>
+
+            <xpath expr="//field[@name='isbn']" position="attributes">
+                <attribute name="placeholder">ISBN-10 ou ISBN-13</attribute>
+                <attribute name="help">ISBN-10 : 10 chiffres, ISBN-13 : 13 chiffres</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -27,5 +32,4 @@
             </xpath>
         </field>
     </record>
-
 </odoo>
