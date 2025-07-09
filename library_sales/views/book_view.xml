@@ -12,4 +12,20 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_book_list" model="ir.ui.view">
+        <field name="name">library.book.list</field>
+        <field name="model">library.book</field>
+        <field name="inherit_id" ref="library.view_book_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="price" />
+            </xpath>
+
+             <xpath expr="//field[@name='author_ids']" position="after">
+                <field name="language" />
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
