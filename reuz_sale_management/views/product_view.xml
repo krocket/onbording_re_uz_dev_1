@@ -8,7 +8,12 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='internal_notes']" position="before">
                 <group name="reuz_fields" string="Reuz Fields">
-                    <field name="api_reference" />
+                    <field name="format" />
+                    <field name="volume" />
+                    <field name="base" />
+                    <field name="color" />
+                    <field name="technology" />
+                    <field name="api_reference" readonly="1" />
                     <field name="silver_reference" />
                 </group>
             </xpath>
