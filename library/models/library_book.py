@@ -45,5 +45,7 @@ class LibraryBook(models.Model):
                 raise UserError("ISBN is required")
             if book.isbn and not book._check_isbn():
                 raise UserError("ISBN is not valid")
+            if book.isbn and book._check_isbn() == True:
+                raise UserError("ISBN is valid")
 
 
