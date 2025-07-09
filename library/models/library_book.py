@@ -45,7 +45,17 @@ class LibraryBook(models.Model):
                 raise UserError("ISBN is required")
             if book.isbn and not book._check_isbn():
                 raise UserError("ISBN is not valid")
-
+            if book.isbn and book._check_isbn():
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': 'Validation ISBN',
+                        'message': f'L\'ISBN {book.isbn} est valide !',
+                        'type': 'success',
+                        'sticky': False,
+                    }
+                }
 
 
 
