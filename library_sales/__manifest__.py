@@ -10,7 +10,7 @@
     'license': 'LGPL-3',
     'depends': ['library'],
     'data': [
-
+        'views/book_view.xml',
     ],
     'installable': True,
     'application': True,
