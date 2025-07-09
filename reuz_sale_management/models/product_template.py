@@ -4,17 +4,17 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
     _description = 'Product for reuz'
 
-    product_format = fields.Char(string='Format')
-    volume = fields.Char(string='Volume')
-    base = fields.Char(string='Base')
-    color = fields.Char(string='Color')
-    technology = fields.Char(string='Technology')
+    reuz_format = fields.Char(string='Format')
+    reuz_volume = fields.Char(string='Volume')
+    reuz_base = fields.Char(string='Base')
+    reuz_color = fields.Char(string='Color')
+    reuz_technology = fields.Char(string='Technology')
 
     api_reference = fields.Char(string='API Reference', compute='_compute_api_reference')
     silver_reference = fields.Char(string='Silver Reference')
 
-    @api.depends('product_format', 'volume', 'base', 'color', 'technology')
+    @api.depends('reuz_format', 'reuz_volume', 'reuz_base', 'reuz_color', 'reuz_technology')
     def _compute_api_reference(self):
         for record in self:
-            record.api_reference = f"{record.product_format or ''}{record.volume or ''}{record.base or ''}{record.color or ''}{record.technology or '' }"
+            record.api_reference = f"{record.reuz_format or ''}{record.reuz_volume or ''}{record.reuz_base or ''}{record.reuz_color or ''}{record.reuz_technology or ''}"
       

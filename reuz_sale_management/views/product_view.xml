@@ -8,11 +8,11 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='internal_notes']" position="before">
                 <group name="reuz_fields" string="Reuz Fields">
-                    <field name="product_format" />
-                    <field name="volume" />
-                    <field name="base" />
-                    <field name="color" />
-                    <field name="technology" />
+                    <field name="reuz_format" />
+                    <field name="reuz_volume" />
+                    <field name="reuz_base" />
+                    <field name="reuz_color" />
+                    <field name="reuz_technology" />
                     <field name="api_reference" readonly="1" />
                     <field name="silver_reference" />
                 </group>
