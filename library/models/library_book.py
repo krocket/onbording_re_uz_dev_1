@@ -6,8 +6,6 @@ class LibraryBook(models.Model):
     _description = 'Books'
 
     name = fields.Char(string='Title', required=True)
-    publisher_id = fields.Many2one('library.publisher', string='Publisher')
-    author_ids = fields.Many2many('library.author', string='Authors')
     description = fields.Text(string='Description')
     publication_date = fields.Date(string='Publication Date')
     isbn = fields.Char(string='ISBN')
@@ -16,10 +14,22 @@ class LibraryBook(models.Model):
     return_date = fields.Date(string='Return Date')
     active = fields.Boolean(string='Active', default=True)
     image = fields.Binary(string='Image')
-    category_id = fields.Many2one('library.book.category', string='Category')
     reference = fields.Char(string='Reference')
 
+
+    # Restrictions fields
+    publisher_id = fields.Many2one('library.publisher', string='Publisher')
+    author_ids = fields.Many2many('library.author', string='Authors')
+    category_id = fields.Many2one('library.book.category', string='Category')
    
+    @api.constrains('isbn')
+    def _check_isbn_constraint(self):
+        for record in self:
+            if record.isbn:
+                try:
+                    record.button_check_isbn()
+                except UserError as e:
+                    raise UserError(str(e))
 
     def _check_isbn(self):
         self.ensure_one()
@@ -28,9 +38,6 @@ class LibraryBook(models.Model):
             return False
         check = sum(digits[i] * (1 if i % 2 == 0 else 3) for i in range(13))
         return check % 10 == 0
-
-
-
 
     def button_check_isbn(self):
         for book in self:
