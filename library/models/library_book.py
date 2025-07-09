@@ -19,3 +19,21 @@ class LibraryBook(models.Model):
     reference = fields.Char(string='Reference')
 
    
+
+    def button_check_isbn(self):
+        for book in self:
+            if not book.isbn:
+                raise UserError("ISBN is required")
+            if book.isbn and not book._check_isbn():
+                raise UserError("ISBN is not valid")
+
+
+    def _check_isbn(self):
+        self.ensure_one()
+        digits = [int(d) for d in self.isbn if d.isdigit()]
+        if len(digits) != 13:
+            return False
+        check = sum(digits[i] * (1 if i % 2 == 0 else 3) for i in range(13))
+        return check % 10 == 0
+
+
