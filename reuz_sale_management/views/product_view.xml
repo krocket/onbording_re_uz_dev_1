@@ -6,9 +6,11 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_variant_count']" position="after">
-                <field name="api_reference" />
-                <field name="silver_reference" />
+            <xpath expr="//group[@name='internal_notes']" position="before">
+                <group name="reuz_fields" string="Reuz Fields">
+                    <field name="api_reference" />
+                    <field name="silver_reference" />
+                </group>
             </xpath>
         </field>
     </record>
