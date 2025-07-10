@@ -7,7 +7,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h1><t t-esc="title"/></h1>
+                            <h1 class="text-primary"><i class="fa fa-book"></i> <t t-esc="title"/></h1>
                             <a href="/api/books" class="btn btn-outline-primary">
                                 <i class="fa fa-home"></i> Accueil
                             </a>
@@ -29,9 +29,12 @@
                         </div>
                         
                         <!-- Statistiques -->
-                        <div class="row mb-3">
-                            <div class="col-12 text-center">
-                                <span class="badge badge-info">Nombre de livres: <t t-esc="count"/></span>
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="alert alert-info text-center">
+                                    <i class="fa fa-info-circle"></i>
+                                    <strong>Nombre de livres:</strong> <t t-esc="count"/>
+                                </div>
                             </div>
                         </div>
                         
@@ -40,49 +43,49 @@
                             <t t-if="books">
                                 <t t-foreach="books" t-as="book">
                                     <div class="col-md-4 col-lg-3 mb-4">
-                                        <div class="card h-100">
+                                        <div class="card h-100 shadow-sm border-0">
                                             <div class="position-relative">
                                                 <img t-att-src="'/web/image/library.book/' + str(book['id']) + '/image'" class="card-img-top" 
                                                      style="height: 200px; object-fit: cover;" 
                                                      t-att-alt="book['name']" 
                                                      onerror="this.src='/web/static/src/img/placeholder.png'"/>
-                                                <span t-att-class="'badge badge-' + ('success' if book['state'] == 'available' else 'warning' if book['state'] == 'borrowed' else 'danger') + ' position-absolute'" 
-                                                      style="top: 10px; right: 10px;">
-                                                    <t t-esc="book['state']"/>
+                                                <span t-att-class="'badge badge-' + ('success' if book['state'] == 'available' else 'warning' if book['state'] == 'borrowed' else 'danger') + ' position-absolute rounded-pill'" 
+                                                      style="top: 10px; right: 10px; font-size: 0.8em;">
+                                                    <i class="fa fa-circle"></i> <t t-esc="book['state']"/>
                                                 </span>
                                             </div>
                                             <div class="card-body">
-                                                <h5 class="card-title"><t t-esc="book['name']"/></h5>
+                                                <h5 class="card-title text-primary"><i class="fa fa-book"></i> <t t-esc="book['name']"/></h5>
                                                 <p class="card-text text-muted small">
-                                                    <strong>Auteurs:</strong> 
+                                                    <i class="fa fa-user text-info"></i> <strong>Auteurs:</strong> 
                                                     <t t-if="book['authors'] and len(book['authors']) > 0">
                                                         <t t-esc="', '.join(book['authors'])"/>
                                                     </t>
                                                     <t t-else="">Auteur inconnu</t>
                                                 </p>
                                                 <p class="card-text text-muted small">
-                                                    <strong>Catégorie:</strong> 
+                                                    <i class="fa fa-tag text-warning"></i> <strong>Catégorie:</strong> 
                                                     <t t-if="book['category']"><t t-esc="book['category']"/></t>
                                                     <t t-else="">Catégorie inconnue</t>
                                                 </p>
                                                 <p class="card-text text-muted small">
-                                                    <strong>Éditeur:</strong> 
+                                                    <i class="fa fa-building text-success"></i> <strong>Éditeur:</strong> 
                                                     <t t-if="book['publisher']"><t t-esc="book['publisher']"/></t>
                                                     <t t-else="">Éditeur inconnu</t>
                                                 </p>
                                                 <t t-if="book['isbn']">
                                                     <p class="card-text text-muted small">
-                                                        <strong>ISBN:</strong> <t t-esc="book['isbn']"/>
+                                                        <i class="fa fa-barcode text-secondary"></i> <strong>ISBN:</strong> <t t-esc="book['isbn']"/>
                                                     </p>
                                                 </t>
                                                 <p class="card-text text-muted small">
-                                                    <strong>État:</strong> <t t-esc="book['state']"/>
+                                                    <i class="fa fa-check-circle text-primary"></i> <strong>État:</strong> <t t-esc="book['state']"/>
                                                 </p>
 
                                             </div>
                                             <div class="card-footer">
-                                                <a t-att-href="'/api/books/' + str(book['id'])" class="btn btn-primary btn-sm">
-                                                    Voir détails
+                                                <a t-att-href="'/api/books/' + str(book['id'])" class="btn btn-primary btn-sm rounded-pill">
+                                                    <i class="fa fa-eye"></i> Voir détails
                                                 </a>
                                             </div>
                                         </div>
@@ -91,7 +94,11 @@
                             </t>
                             <t t-else="">
                                 <div class="col-12 text-center">
-                                    <p class="text-muted">Aucun livre trouvé</p>
+                                    <div class="alert alert-warning">
+                                        <i class="fa fa-exclamation-triangle"></i>
+                                        <strong>Aucun livre trouvé</strong>
+                                        <p class="mb-0">Essayez de modifier vos critères de recherche.</p>
+                                    </div>
                                 </div>
                             </t>
                         </div>
