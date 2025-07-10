@@ -11,6 +11,7 @@
     'depends': ['sale_management'],
     'data': [
         'views/product_view.xml',
+        'views/sales_order_pdf.xml',
     ],
     'installable': True,
     'application': True,
