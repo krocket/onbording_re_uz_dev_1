@@ -36,11 +36,11 @@
                             </div>
                         </div>
                         <!-- Liste des livres -->
-                        <div class="row">
+                        <div class="row gx-4 gy-4 justify-content-start">
                             <t t-if="books">
                                 <t t-foreach="books" t-as="book">
-                                    <div class="col-md-6 col-lg-4 col-xl-3 mb-4 d-flex align-items-stretch">
-                                        <div class="card h-100 shadow border-0 book-card">
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 d-flex align-items-stretch">
+                                        <div class="card h-100 shadow border-0 book-card w-100">
                                             <div class="position-relative">
                                                 <img t-att-src="'/web/image/library.book/' + str(book['id']) + '/image'" class="card-img-top book-image" 
                                                      style="height: 220px; object-fit: cover; background: #e9ecef;" 
