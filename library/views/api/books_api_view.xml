@@ -56,20 +56,18 @@
                                                 <p class="card-text text-muted small">
                                                     <strong>Auteurs:</strong> 
                                                     <t t-if="book.authors and len(book.authors) > 0">
-                                                        <t t-foreach="book.authors" t-as="author" t-foreach-index="idx">
-                                                            <span t-esc="author.name"/><t t-if="idx != len(book.authors) - 1">, </t>
-                                                        </t>
+                                                        <t t-esc="', '.join(book.authors)"/>
                                                     </t>
                                                     <t t-else="">Auteur inconnu</t>
                                                 </p>
                                                 <p class="card-text text-muted small">
                                                     <strong>Catégorie:</strong> 
-                                                    <t t-if="book.category"><t t-esc="book.category.name"/></t>
+                                                    <t t-if="book.category"><t t-esc="book.category"/></t>
                                                     <t t-else="">Catégorie inconnue</t>
                                                 </p>
                                                 <p class="card-text text-muted small">
                                                     <strong>Éditeur:</strong> 
-                                                    <t t-if="book.publisher"><t t-esc="book.publisher.name"/></t>
+                                                    <t t-if="book.publisher"><t t-esc="book.publisher"/></t>
                                                     <t t-else="">Éditeur inconnu</t>
                                                 </p>
                                                 <t t-if="book.isbn">
