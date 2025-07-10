@@ -9,9 +9,18 @@
                 <sheet>
                     <group>
                         <field name="name"/>
+                        <field name="first_name"/>
+                        <field name="last_name"/>
                         <field name="biography"/>
                         <field name="birth_date"/>
                         <field name="death_date"/>
+                        <field name="nationality"/>
+                        <field name="website"/>
+                        <field name="email"/>
+                        <field name="phone"/>
+                        <field name="address"/>
+                        <field name="image"/>
+                        <field name="active"/>
                     </group>
                 </sheet>
             </form>
@@ -25,8 +34,12 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name"/>
+                <field name="first_name"/>
+                <field name="last_name"/>
                 <field name="birth_date"/>
-                <field name="death_date"/>
+                <field name="nationality"/>
+                <field name="email"/>
+                <field name="active"/>
             </list>
         </field>
     </record>
