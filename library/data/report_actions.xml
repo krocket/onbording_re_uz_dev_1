@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Action de rapport pour la roue dentée de la liste (sélection ou tout) -->
+        <!-- Action de rapport pour la roue dentée de la liste (catalogue) -->
         <record id="action_library_book_report_list" model="ir.actions.report">
             <field name="name">Générer Catalogue PDF</field>
             <field name="model">library.book</field>
@@ -23,6 +23,18 @@
             <field name="binding_model_id" ref="model_library_book"/>
             <field name="binding_type">report</field>
             <field name="binding_view_types">form</field>
+        </record>
+
+        <!-- Action de rapport pour la vue liste (fiches détail) -->
+        <record id="action_library_book_detail_report_list" model="ir.actions.report">
+            <field name="name">Générer Fiche PDF</field>
+            <field name="model">library.book</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">library.library_book_detail_report</field>
+            <field name="report_file">library.library_book_detail_report</field>
+            <field name="binding_model_id" ref="model_library_book"/>
+            <field name="binding_type">report</field>
+            <field name="binding_view_types">list</field>
         </record>
     </data>
 </odoo> 
