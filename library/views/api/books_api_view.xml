@@ -42,24 +42,46 @@
                                     <div class="col-md-4 col-lg-3 mb-4">
                                         <div class="card h-100">
                                             <div class="position-relative">
-                                                <img t-att-src="'/web/image/library.book/' + str(book.id) + '/image'" class="card-img-top" 
+                                                <img t-att-src="'/web/image/library.book/' + str(book['id']) + '/image'" class="card-img-top" 
                                                      style="height: 200px; object-fit: cover;" 
-                                                     t-att-alt="book.name" 
+                                                     t-att-alt="book['name']" 
                                                      onerror="this.src='/web/static/src/img/placeholder.png'"/>
-                                                <span t-att-class="'badge badge-' + ('success' if book.state == 'available' else 'warning' if book.state == 'borrowed' else 'danger') + ' position-absolute'" 
+                                                <span t-att-class="'badge badge-' + ('success' if book['state'] == 'available' else 'warning' if book['state'] == 'borrowed' else 'danger') + ' position-absolute'" 
                                                       style="top: 10px; right: 10px;">
-                                                    <t t-esc="book.state"/>
+                                                    <t t-esc="book['state']"/>
                                                 </span>
                                             </div>
                                             <div class="card-body">
-                                                <h5 class="card-title"><t t-esc="book.name"/></h5>
+                                                <h5 class="card-title"><t t-esc="book['name']"/></h5>
                                                 <p class="card-text text-muted small">
-                                                    <strong>État:</strong> <t t-esc="book.state"/>
+                                                    <strong>Auteurs:</strong> 
+                                                    <t t-if="book['authors'] and len(book['authors']) > 0">
+                                                        <t t-esc="', '.join(book['authors'])"/>
+                                                    </t>
+                                                    <t t-else="">Auteur inconnu</t>
+                                                </p>
+                                                <p class="card-text text-muted small">
+                                                    <strong>Catégorie:</strong> 
+                                                    <t t-if="book['category']"><t t-esc="book['category']"/></t>
+                                                    <t t-else="">Catégorie inconnue</t>
+                                                </p>
+                                                <p class="card-text text-muted small">
+                                                    <strong>Éditeur:</strong> 
+                                                    <t t-if="book['publisher']"><t t-esc="book['publisher']"/></t>
+                                                    <t t-else="">Éditeur inconnu</t>
+                                                </p>
+                                                <t t-if="book['isbn']">
+                                                    <p class="card-text text-muted small">
+                                                        <strong>ISBN:</strong> <t t-esc="book['isbn']"/>
+                                                    </p>
+                                                </t>
+                                                <p class="card-text text-muted small">
+                                                    <strong>État:</strong> <t t-esc="book['state']"/>
                                                 </p>
 
                                             </div>
                                             <div class="card-footer">
-                                                <a t-att-href="'/api/books/' + str(book.id)" class="btn btn-primary btn-sm">
+                                                <a t-att-href="'/api/books/' + str(book['id'])" class="btn btn-primary btn-sm">
                                                     Voir détails
                                                 </a>
                                             </div>

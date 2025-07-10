@@ -112,7 +112,12 @@ class LibraryController(http.Controller):
                 book_info = {
                     'id': book.id,
                     'name': book.name or 'Sans titre',
-                    'state': book.state or 'available'
+                    'description': book.description or '',
+                    'state': book.state or 'available',
+                    'isbn': book.isbn or '',
+                    'publisher': book.publisher_id.name if book.publisher_id else None,
+                    'authors': [author.name for author in book.author_ids if author.name],
+                    'category': book.category_id.name if book.category_id else None
                 }
                 books_data.append(book_info)
             
