@@ -56,8 +56,8 @@ class LibraryBook(models.Model):
 
     def action_generate_pdf_report(self):
         """Génère un rapport PDF de la liste des livres"""
-        # Si appelé depuis le menu, générer le rapport pour tous les livres
-        if self.env.context.get('action_generate_pdf_report'):
+        # Si appelé depuis le menu ou la liste, générer le rapport pour tous les livres
+        if self.env.context.get('action_generate_pdf_report') or len(self) > 1:
             books = self.env['library.book'].search([('active', '=', True)])
             return {
                 'type': 'ir.actions.report',

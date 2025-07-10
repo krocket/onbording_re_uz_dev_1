@@ -43,7 +43,7 @@ class LibraryBookReport(models.AbstractModel):
             'docs': docs,
             'books_data': books_data,
             'total_books': len(books_data),
-            'available_books': len([b for b in books_data if b['state'] == 'available']),
-            'borrowed_books': len([b for b in books_data if b['state'] == 'borrowed']),
-            'lost_books': len([b for b in books_data if b['state'] == 'lost']),
+            'available_books': len([b for b in books_data if b['state'] == 'Available']),
+            'borrowed_books': len([b for b in books_data if b['state'] == 'Borrowed']),
+            'lost_books': len([b for b in books_data if b['state'] == 'Lost']),
         } 

@@ -73,13 +73,13 @@
                                                     <td><t t-esc="book['category']"/></td>
                                                     <td><t t-esc="book['publication_date']"/></td>
                                                     <td>
-                                                        <span t-if="book['state'] == 'available'" class="badge badge-success">
+                                                        <span t-if="book['state'] == 'Available'" class="badge badge-success">
                                                             Disponible
                                                         </span>
-                                                        <span t-elif="book['state'] == 'borrowed'" class="badge badge-warning">
+                                                        <span t-elif="book['state'] == 'Borrowed'" class="badge badge-warning">
                                                             Emprunté
                                                         </span>
-                                                        <span t-elif="book['state'] == 'lost'" class="badge badge-danger">
+                                                        <span t-elif="book['state'] == 'Lost'" class="badge badge-danger">
                                                             Perdu
                                                         </span>
                                                         <span t-else="" class="badge badge-secondary">
@@ -124,7 +124,7 @@
             <field name="report_file">library.library_book_report</field>
             <field name="binding_model_id" ref="model_library_book"/>
             <field name="binding_type">report</field>
-            <field name="binding_view_types">list,form</field>
+            <field name="binding_view_types">list</field>
         </record>
     </data>
 </odoo> 
