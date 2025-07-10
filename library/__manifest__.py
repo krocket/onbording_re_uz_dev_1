@@ -15,6 +15,7 @@
         'views/category_view.xml',
         'views/author_view.xml',
         'views/publisher_view.xml',
+        'views/api_book_view.xml',
         'data/categories.xml',
         'data/authors.xml',
         'data/publisher.xml',
