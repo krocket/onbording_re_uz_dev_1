@@ -40,8 +40,8 @@
                                         <ul class="list-unstyled">
                                             <li><strong>Auteurs:</strong> 
                                                 <t t-if="book.authors and len(book.authors) > 0">
-                                                    <t t-foreach="book.authors" t-as="author">
-                                                        <span t-esc="author.name"/><t t-if="not author_last">, </t>
+                                                    <t t-foreach="book.authors" t-as="author" t-foreach-index="idx">
+                                                        <span t-esc="author.name"/><t t-if="idx != len(book.authors) - 1">, </t>
                                                     </t>
                                                 </t>
                                                 <t t-else>Auteur inconnu</t>
