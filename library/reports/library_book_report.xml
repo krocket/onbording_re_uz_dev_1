@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <!-- Template pour le rapport PDF -->
-        <template id="library_book_report_template">
+        <template id="library_book_report">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-call="web.external_layout">
@@ -73,14 +73,14 @@
                                                     <td><t t-esc="book['category']"/></td>
                                                     <td><t t-esc="book['publication_date']"/></td>
                                                     <td>
-                                                        <span t-if="book['state'] == 'Disponible'" class="badge badge-success">
-                                                            <t t-esc="book['state']"/>
+                                                        <span t-if="book['state'] == 'available'" class="badge badge-success">
+                                                            Disponible
                                                         </span>
-                                                        <span t-elif="book['state'] == 'Emprunté'" class="badge badge-warning">
-                                                            <t t-esc="book['state']"/>
+                                                        <span t-elif="book['state'] == 'borrowed'" class="badge badge-warning">
+                                                            Emprunté
                                                         </span>
-                                                        <span t-elif="book['state'] == 'Perdu'" class="badge badge-danger">
-                                                            <t t-esc="book['state']"/>
+                                                        <span t-elif="book['state'] == 'lost'" class="badge badge-danger">
+                                                            Perdu
                                                         </span>
                                                         <span t-else="" class="badge badge-secondary">
                                                             <t t-esc="book['state']"/>

@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 class LibraryBookReport(models.AbstractModel):
     _name = 'report.library.library_book_report'
     _description = 'Rapport des livres de bibliothèque'
+    _template = 'library.library_book_report'
 
     @api.model
     def _get_report_values(self, docids, data=None):
@@ -42,7 +43,7 @@ class LibraryBookReport(models.AbstractModel):
             'docs': docs,
             'books_data': books_data,
             'total_books': len(books_data),
-            'available_books': len([b for b in books_data if b['state'] == 'Disponible']),
-            'borrowed_books': len([b for b in books_data if b['state'] == 'Emprunté']),
-            'lost_books': len([b for b in books_data if b['state'] == 'Perdu']),
+            'available_books': len([b for b in books_data if b['state'] == 'available']),
+            'borrowed_books': len([b for b in books_data if b['state'] == 'borrowed']),
+            'lost_books': len([b for b in books_data if b['state'] == 'lost']),
         } 
