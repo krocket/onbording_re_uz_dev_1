@@ -14,24 +14,22 @@ class LibraryController(http.Controller):
             
             # Vérifier library.book
             try:
-                book_model = env.get('library.book')
-                if book_model:
-                    book_count = book_model.search_count([])
-                    models_info.append(f"library.book: {book_count} enregistrements")
-                else:
-                    models_info.append("library.book: NON DISPONIBLE")
+                book_model = env['library.book']
+                book_count = book_model.search_count([])
+                models_info.append(f"library.book: {book_count} enregistrements")
+            except KeyError:
+                models_info.append("library.book: NON DISPONIBLE")
             except Exception as e:
                 models_info.append(f"library.book: ERREUR - {str(e)}")
             
             # Vérifier d'autres modèles
             for model_name in ['library.author', 'library.publisher', 'library.book.category']:
                 try:
-                    model = env.get(model_name)
-                    if model:
-                        count = model.search_count([])
-                        models_info.append(f"{model_name}: {count} enregistrements")
-                    else:
-                        models_info.append(f"{model_name}: NON DISPONIBLE")
+                    model = env[model_name]
+                    count = model.search_count([])
+                    models_info.append(f"{model_name}: {count} enregistrements")
+                except KeyError:
+                    models_info.append(f"{model_name}: NON DISPONIBLE")
                 except Exception as e:
                     models_info.append(f"{model_name}: ERREUR - {str(e)}")
             
@@ -69,8 +67,9 @@ class LibraryController(http.Controller):
         """Récupère tous les livres et affiche une vue HTML"""
         try:
             # Vérifier que le modèle existe
-            book_model = request.env.get('library.book')
-            if not book_model:
+            try:
+                book_model = request.env['library.book']
+            except KeyError:
                 return request.render('library.error_template', {
                     'error_message': 'Le modèle library.book n\'est pas disponible. Vérifiez que le module est installé.'
                 })
@@ -105,6 +104,11 @@ class LibraryController(http.Controller):
                 except Exception as book_error:
                     # Ignorer les livres avec des erreurs et continuer
                     continue
+            
+            # Debug: afficher les données avant le rendu
+            print(f"DEBUG: {len(books_data)} livres trouvés")
+            for i, book in enumerate(books_data[:3]):  # Afficher les 3 premiers
+                print(f"DEBUG: Livre {i+1}: {book.get('name', 'Sans nom')}")
             
             return request.render('library.books_list_template', {
                 'books': books_data,
