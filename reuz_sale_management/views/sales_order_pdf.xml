@@ -3,7 +3,7 @@
 <odoo>
     <template id="sales_order_pdf_template"  inherit_id="sale.report_saleorder_document">
         <xpath expr="//td[@name='td_name']" position="inside">
-                <span>API Ref: <field name="api_reference"/></span>
+                <span >API Ref: <span t-field="line.api_reference">REFERENCE</span></span>
         </xpath>
     </template>
 </odoo>
