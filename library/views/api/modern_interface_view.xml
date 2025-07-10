@@ -12,7 +12,7 @@
                         <div class="row mb-4">
                             <div class="col-md-6 offset-md-3">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="searchInput" placeholder="Rechercher un livre, auteur, catégorie...">
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Rechercher un livre, auteur, catégorie..."/>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="button" id="searchBtn">
                                             <i class="fa fa-search"></i> Rechercher
@@ -311,7 +311,7 @@
                             <div class="col-md-4 col-lg-3 mb-4">
                                 <div class="card book-card h-100" onclick="modernBooksAPI.showBookDetails(${book.id})">
                                     <div class="position-relative">
-                                        <img src="/web/image/library.book/${book.id}/image" class="card-img-top book-image" alt="${book.name}" onerror="this.src='/web/static/src/img/placeholder.png'">
+                                        <img src="/web/image/library.book/${book.id}/image" class="card-img-top book-image" alt="${book.name}" onerror="this.src='/web/static/src/img/placeholder.png'"/>
                                         <span class="badge badge-${stateClass} state-badge">${book.state}</span>
                                     </div>
                                     <div class="card-body">
@@ -401,7 +401,7 @@
                         modalBody.innerHTML = `
                             <div class="row">
                                 <div class="col-md-4">
-                                    <img src="/web/image/library.book/${book.id}/image" class="img-fluid" alt="${book.name}" onerror="this.src='/web/static/src/img/placeholder.png'">
+                                    <img src="/web/image/library.book/${book.id}/image" class="img-fluid" alt="${book.name}" onerror="this.src='/web/static/src/img/placeholder.png'"/>
                                 </div>
                                 <div class="col-md-8">
                                     <h6>Description</h6>
