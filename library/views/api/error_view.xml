@@ -2,7 +2,7 @@
 <odoo>
     <!-- Vue API pour les erreurs -->
     <template id="error_template" name="Error Template">
-        <t t-call="website.layout">
+        <t t-call="web.layout">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">

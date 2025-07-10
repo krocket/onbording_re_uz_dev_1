@@ -2,7 +2,7 @@
 <odoo>
     <!-- Vue API moderne avec JavaScript -->
     <template id="modern_books_interface" name="Modern Books Interface">
-        <t t-call="website.layout">
+        <t t-call="web.layout">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
