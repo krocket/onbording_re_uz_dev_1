@@ -178,33 +178,14 @@
                     // Charger les données au démarrage
                     loadBooks();
                     
-                    // Événements de recherche
-                    $('#searchBtn').click(function() {
-                        filterBooks();
-                    });
-                    
-                    $('#searchInput').keypress(function(e) {
-                        if (e.which == 13) { // Enter key
-                            filterBooks();
-                        }
-                    });
-                    
-                    // Événements de filtres
-                    $('.filter-btn').click(function() {
-                        $('.filter-btn').removeClass('active');
-                        $(this).addClass('active');
-                        currentFilter = $(this).data('filter');
-                        filterBooks();
-                    });
-                    
-                    function loadBooks() {
+                    function loadBooks(searchTerm = '') {
                         showLoading(true);
                         
                         $.ajax({
                             url: '/api/books/data',
                             type: 'POST',
                             dataType: 'json',
-                            data: {},
+                            data: { search_term: searchTerm },
                             success: function(response) {
                                 if (response.success) {
                                     allBooks = response.books;
@@ -223,6 +204,27 @@
                             }
                         });
                     }
+                    
+                    // Événements de recherche
+                    $('#searchBtn').click(function() {
+                        const searchTerm = $('#searchInput').val();
+                        loadBooks(searchTerm);
+                    });
+                    
+                    $('#searchInput').keypress(function(e) {
+                        if (e.which == 13) { // Enter key
+                            const searchTerm = $('#searchInput').val();
+                            loadBooks(searchTerm);
+                        }
+                    });
+                    
+                    // Événements de filtres
+                    $('.filter-btn').click(function() {
+                        $('.filter-btn').removeClass('active');
+                        $(this).addClass('active');
+                        currentFilter = $(this).data('filter');
+                        filterBooks();
+                    });
                     
                     function filterBooks() {
                         const searchTerm = $('#searchInput').val().toLowerCase();

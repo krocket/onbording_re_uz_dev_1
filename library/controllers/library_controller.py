@@ -137,10 +137,19 @@ class LibraryController(http.Controller):
     
     @http.route('/api/books/data', type='json', auth='public', methods=['POST'], csrf=False)
     def get_books_data(self, **kwargs):
-        """Récupère les données des livres au format JSON pour l'interface moderne"""
+        """Récupère les données des livres au format JSON pour l'interface moderne, avec recherche possible"""
         try:
-            books = request.env['library.book'].sudo().search([])
-            
+            search_term = kwargs.get('search_term', '').strip() if 'search_term' in kwargs else ''
+            domain = []
+            if search_term:
+                domain = ['|', '|', '|',
+                    ('name', 'ilike', search_term),
+                    ('author_ids.name', 'ilike', search_term),
+                    ('category_id.name', 'ilike', search_term),
+                    ('publisher_id.name', 'ilike', search_term),
+                    ('isbn', 'ilike', search_term)
+                ]
+            books = request.env['library.book'].sudo().search(domain)
             books_data = []
             for book in books:
                 book_info = {
@@ -154,13 +163,11 @@ class LibraryController(http.Controller):
                     'category': book.category_id.name if book.category_id else None
                 }
                 books_data.append(book_info)
-            
             return {
                 'success': True,
                 'books': books_data,
                 'total': len(books_data)
             }
-            
         except Exception as e:
             return {
                 'success': False,
