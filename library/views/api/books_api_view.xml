@@ -60,17 +60,17 @@
                                                             <span t-esc="author.name"/><t t-if="idx != len(book.authors) - 1">, </t>
                                                         </t>
                                                     </t>
-                                                    <t t-else>Auteur inconnu</t>
+                                                    <t t-else="">Auteur inconnu</t>
                                                 </p>
                                                 <p class="card-text text-muted small">
                                                     <strong>Catégorie:</strong> 
                                                     <t t-if="book.category"><t t-esc="book.category.name"/></t>
-                                                    <t t-else>Catégorie inconnue</t>
+                                                    <t t-else="">Catégorie inconnue</t>
                                                 </p>
                                                 <p class="card-text text-muted small">
                                                     <strong>Éditeur:</strong> 
                                                     <t t-if="book.publisher"><t t-esc="book.publisher.name"/></t>
-                                                    <t t-else>Éditeur inconnu</t>
+                                                    <t t-else="">Éditeur inconnu</t>
                                                 </p>
                                                 <t t-if="book.isbn">
                                                     <p class="card-text text-muted small">
@@ -87,7 +87,7 @@
                                     </div>
                                 </t>
                             </t>
-                            <t t-else>
+                            <t t-else="">
                                 <div class="col-12 text-center">
                                     <p class="text-muted">Aucun livre trouvé</p>
                                 </div>
