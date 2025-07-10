@@ -54,5 +54,23 @@ class LibraryBook(models.Model):
                 }
             return True
 
-
-
+    def action_generate_pdf_report(self):
+        """Génère un rapport PDF de la liste des livres"""
+        # Si appelé depuis le menu, générer le rapport pour tous les livres
+        if self.env.context.get('action_generate_pdf_report'):
+            books = self.env['library.book'].search([('active', '=', True)])
+            return {
+                'type': 'ir.actions.report',
+                'report_name': 'library.library_book_report',
+                'report_type': 'qweb-pdf',
+                'data': None,
+                'context': {'doc_ids': books.ids}
+            }
+        
+        # Si appelé depuis un livre spécifique
+        return {
+            'type': 'ir.actions.report',
+            'report_name': 'library.library_book_report',
+            'report_type': 'qweb-pdf',
+            'data': None,
+        }

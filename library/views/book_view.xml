@@ -8,6 +8,7 @@
             <form string="Book">
                 <header>
                     <button name="button_check_isbn" type="object" string="Check ISBN"/>
+                    <button name="action_generate_pdf_report" type="object" string="Générer PDF" class="btn-primary"/>
                 </header>
                 <sheet>
                     <group>
