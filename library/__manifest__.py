@@ -8,7 +8,7 @@
     """,
     'author': 'Coco',
     'license': 'LGPL-3',
-    'depends': [],
+    'depends': ["website"],
     'data': [
         # Menus
         'views/menus/library_menu.xml',
