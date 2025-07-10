@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Vue pour l'API Web des livres -->
-    <template id="api_books_template" name="API Books Template">
+    <!-- Vue API moderne avec JavaScript -->
+    <template id="modern_books_interface" name="Modern Books Interface">
         <t t-call="web.layout">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <h1 class="text-center mb-4">Bibliothèque - API Livres</h1>
+                        <h1 class="text-center mb-4">Bibliothèque - Interface Moderne</h1>
                         
-                        <!-- Barre de recherche -->
+                        <!-- Barre de recherche moderne -->
                         <div class="row mb-4">
                             <div class="col-md-6 offset-md-3">
                                 <div class="input-group">
@@ -22,14 +22,54 @@
                             </div>
                         </div>
                         
-                        <!-- Filtres -->
+                        <!-- Filtres modernes -->
                         <div class="row mb-3">
                             <div class="col-12 text-center">
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-outline-primary filter-btn" data-filter="all">Tous</button>
+                                    <button type="button" class="btn btn-outline-primary filter-btn active" data-filter="all">Tous</button>
                                     <button type="button" class="btn btn-outline-success filter-btn" data-filter="available">Disponibles</button>
                                     <button type="button" class="btn btn-outline-warning filter-btn" data-filter="borrowed">Empruntés</button>
                                     <button type="button" class="btn btn-outline-danger filter-btn" data-filter="lost">Perdus</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Statistiques en temps réel -->
+                        <div class="row mb-3">
+                            <div class="col-12 text-center">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="card bg-primary text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Total</h5>
+                                                <h3 id="totalCount">0</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card bg-success text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Disponibles</h5>
+                                                <h3 id="availableCount">0</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card bg-warning text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Empruntés</h5>
+                                                <h3 id="borrowedCount">0</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card bg-danger text-white">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Perdus</h5>
+                                                <h3 id="lostCount">0</h3>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -79,30 +119,52 @@
             
             <style>
                 .book-card {
-                    transition: transform 0.2s;
+                    transition: transform 0.2s, box-shadow 0.2s;
                     cursor: pointer;
+                    border: none;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 }
                 .book-card:hover {
                     transform: translateY(-5px);
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
                 }
                 .book-image {
-                    height: 200px;
+                    height: 250px;
                     object-fit: cover;
                 }
                 .state-badge {
                     position: absolute;
                     top: 10px;
                     right: 10px;
+                    font-size: 0.8em;
                 }
                 .filter-btn.active {
                     background-color: #007bff;
                     color: white;
                 }
+                .card {
+                    border-radius: 10px;
+                    overflow: hidden;
+                }
+                .card-body {
+                    padding: 1.5rem;
+                }
+                .btn-group .btn {
+                    border-radius: 20px;
+                    margin: 0 2px;
+                }
+                .pagination .page-link {
+                    border-radius: 5px;
+                    margin: 0 2px;
+                }
+                .spinner-border {
+                    width: 3rem;
+                    height: 3rem;
+                }
             </style>
             
             <script>
-                class BooksAPI {
+                class ModernBooksAPI {
                     constructor() {
                         this.currentPage = 1;
                         this.itemsPerPage = 12;
@@ -114,6 +176,7 @@
                     init() {
                         this.bindEvents();
                         this.loadBooks();
+                        this.updateStats();
                     }
                     
                     bindEvents() {
@@ -154,6 +217,7 @@
                             if (data.success) {
                                 this.books = data.data;
                                 this.displayBooks();
+                                this.updateStats();
                             } else {
                                 this.showError('Erreur lors du chargement des livres');
                             }
@@ -179,6 +243,7 @@
                             if (data.success) {
                                 this.books = data.data;
                                 this.displayBooks();
+                                this.updateStats();
                             } else {
                                 this.showError(data.error || 'Erreur lors de la recherche');
                             }
@@ -196,6 +261,22 @@
                         });
                         
                         this.displayBooks(filteredBooks);
+                        this.updateStats(filteredBooks);
+                    }
+                    
+                    updateStats(booksToCount = null) {
+                        const books = booksToCount || this.books;
+                        const stats = {
+                            total: books.length,
+                            available: books.filter(b => b.state === 'available').length,
+                            borrowed: books.filter(b => b.state === 'borrowed').length,
+                            lost: books.filter(b => b.state === 'lost').length
+                        };
+                        
+                        document.getElementById('totalCount').textContent = stats.total;
+                        document.getElementById('availableCount').textContent = stats.available;
+                        document.getElementById('borrowedCount').textContent = stats.borrowed;
+                        document.getElementById('lostCount').textContent = stats.lost;
                     }
                     
                     displayBooks(booksToDisplay = null) {
@@ -228,7 +309,7 @@
                         
                         return `
                             <div class="col-md-4 col-lg-3 mb-4">
-                                <div class="card book-card h-100" onclick="booksAPI.showBookDetails(${book.id})">
+                                <div class="card book-card h-100" onclick="modernBooksAPI.showBookDetails(${book.id})">
                                     <div class="position-relative">
                                         <img src="/web/image/library.book/${book.id}/image" class="card-img-top book-image" alt="${book.name}" onerror="this.src='/web/static/src/img/placeholder.png'">
                                         <span class="badge badge-${stateClass} state-badge">${book.state}</span>
@@ -259,7 +340,7 @@
                         // Bouton précédent
                         paginationHTML += `
                             <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
-                                <a class="page-link" href="#" onclick="booksAPI.changePage(${this.currentPage - 1})">Précédent</a>
+                                <a class="page-link" href="#" onclick="modernBooksAPI.changePage(${this.currentPage - 1})">Précédent</a>
                             </li>
                         `;
                         
@@ -268,7 +349,7 @@
                             if (i === 1 || i === totalPages || (i >= this.currentPage - 2 && i <= this.currentPage + 2)) {
                                 paginationHTML += `
                                     <li class="page-item ${i === this.currentPage ? 'active' : ''}">
-                                        <a class="page-link" href="#" onclick="booksAPI.changePage(${i})">${i}</a>
+                                        <a class="page-link" href="#" onclick="modernBooksAPI.changePage(${i})">${i}</a>
                                     </li>
                                 `;
                             } else if (i === this.currentPage - 3 || i === this.currentPage + 3) {
@@ -279,7 +360,7 @@
                         // Bouton suivant
                         paginationHTML += `
                             <li class="page-item ${this.currentPage === totalPages ? 'disabled' : ''}">
-                                <a class="page-link" href="#" onclick="booksAPI.changePage(${this.currentPage + 1})">Suivant</a>
+                                <a class="page-link" href="#" onclick="modernBooksAPI.changePage(${this.currentPage + 1})">Suivant</a>
                             </li>
                         `;
                         
@@ -366,228 +447,24 @@
                 }
                 
                 // Initialisation
-                let booksAPI;
+                let modernBooksAPI;
                 document.addEventListener('DOMContentLoaded', function() {
-                    booksAPI = new BooksAPI();
+                    modernBooksAPI = new ModernBooksAPI();
                 });
             </script>
         </t>
     </template>
     
-    <!-- Action pour ouvrir la vue API -->
-    <record id="action_api_books" model="ir.actions.client">
-        <field name="name">API Livres</field>
-        <field name="tag">api_books_template</field>
+    <!-- Action pour ouvrir l'interface moderne -->
+    <record id="action_modern_books_interface" model="ir.actions.client">
+        <field name="name">Interface Moderne</field>
+        <field name="tag">modern_books_interface</field>
     </record>
     
-    <!-- Menu pour l'API -->
-    <menuitem id="menu_api_books"
-              name="API Livres"
+    <!-- Menu pour l'interface moderne -->
+    <menuitem id="menu_modern_interface"
+              name="Interface Moderne"
               parent="library_menu"
-              action="library.action_api_books"
-              sequence="20"/>
-    
-    <!-- Template pour la liste des livres -->
-    <template id="books_list_template" name="Books List Template">
-        <t t-call="web.layout">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h1><t t-esc="title"/></h1>
-                            <a href="/api/books" class="btn btn-outline-primary">
-                                <i class="fa fa-home"></i> Accueil
-                            </a>
-                        </div>
-                        
-                        <!-- Barre de recherche -->
-                        <div class="row mb-4">
-                            <div class="col-md-6 offset-md-3">
-                                <form method="GET" action="/api/books/search" class="input-group">
-                                    <input type="text" name="q" class="form-control" placeholder="Rechercher un livre, auteur, catégorie..." 
-                                           t-att-value="search_term or ''">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="submit">
-                                            <i class="fa fa-search"></i> Rechercher
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        
-                        <!-- Statistiques -->
-                        <div class="row mb-3">
-                            <div class="col-12 text-center">
-                                <span class="badge badge-info">Nombre de livres: <t t-esc="count"/></span>
-                            </div>
-                        </div>
-                        
-                        <!-- Liste des livres -->
-                        <div class="row">
-                            <t t-if="books">
-                                <t t-foreach="books" t-as="book">
-                                    <div class="col-md-4 col-lg-3 mb-4">
-                                        <div class="card h-100">
-                                            <div class="position-relative">
-                                                <img src="/web/image/library.book/{{book.id}}/image" class="card-img-top" 
-                                                     style="height: 200px; object-fit: cover;" 
-                                                     alt="{{book.name}}" 
-                                                     onerror="this.src='/web/static/src/img/placeholder.png'">
-                                                <span class="badge badge-{{'success' if book.state == 'available' else 'warning' if book.state == 'borrowed' else 'danger'}} position-absolute" 
-                                                      style="top: 10px; right: 10px;">
-                                                    {{book.state}}
-                                                </span>
-                                            </div>
-                                            <div class="card-body">
-                                                <h5 class="card-title">{{book.name}}</h5>
-                                                <p class="card-text text-muted small">
-                                                    <strong>Auteurs:</strong> 
-                                                    <t t-if="book.authors and len(book.authors) > 0">
-                                                        <t t-foreach="book.authors" t-as="author">
-                                                            <span t-esc="author.name"/><t t-if="not author_last">, </t>
-                                                        </t>
-                                                    </t>
-                                                    <t t-else>Auteur inconnu</t>
-                                                </p>
-                                                <p class="card-text text-muted small">
-                                                    <strong>Catégorie:</strong> 
-                                                    <t t-if="book.category">{{book.category.name}}</t>
-                                                    <t t-else>Catégorie inconnue</t>
-                                                </p>
-                                                <p class="card-text text-muted small">
-                                                    <strong>Éditeur:</strong> 
-                                                    <t t-if="book.publisher">{{book.publisher.name}}</t>
-                                                    <t t-else>Éditeur inconnu</t>
-                                                </p>
-                                                <t t-if="book.isbn">
-                                                    <p class="card-text text-muted small">
-                                                        <strong>ISBN:</strong> {{book.isbn}}
-                                                    </p>
-                                                </t>
-                                            </div>
-                                            <div class="card-footer">
-                                                <a href="/api/books/{{book.id}}" class="btn btn-primary btn-sm">
-                                                    Voir détails
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </t>
-                            </t>
-                            <t t-else>
-                                <div class="col-12 text-center">
-                                    <p class="text-muted">Aucun livre trouvé</p>
-                                </div>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
-    
-    <!-- Template pour les détails d'un livre -->
-    <template id="book_detail_template" name="Book Detail Template">
-        <t t-call="web.layout">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h1>Détails du livre</h1>
-                            <a href="/api/books" class="btn btn-outline-primary">
-                                <i class="fa fa-arrow-left"></i> Retour à la liste
-                            </a>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <img src="/web/image/library.book/{{book.id}}/image" class="card-img-top" 
-                                         alt="{{book.name}}" 
-                                         onerror="this.src='/web/static/src/img/placeholder.png'">
-                                    <div class="card-body text-center">
-                                        <span class="badge badge-{{'success' if book.state == 'available' else 'warning' if book.state == 'borrowed' else 'danger'}} mb-2">
-                                            {{book.state}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h2 class="card-title">{{book.name}}</h2>
-                                        
-                                        <t t-if="book.description">
-                                            <h5>Description</h5>
-                                            <p class="card-text">{{book.description}}</p>
-                                        </t>
-                                        
-                                        <h5>Informations</h5>
-                                        <ul class="list-unstyled">
-                                            <li><strong>Auteurs:</strong> 
-                                                <t t-if="book.authors and len(book.authors) > 0">
-                                                    <t t-foreach="book.authors" t-as="author">
-                                                        <span t-esc="author.name"/><t t-if="not author_last">, </t>
-                                                    </t>
-                                                </t>
-                                                <t t-else>Auteur inconnu</t>
-                                            </li>
-                                            <li><strong>Catégorie:</strong> 
-                                                <t t-if="book.category">{{book.category.name}}</t>
-                                                <t t-else>Catégorie inconnue</t>
-                                            </li>
-                                            <li><strong>Éditeur:</strong> 
-                                                <t t-if="book.publisher">{{book.publisher.name}}</t>
-                                                <t t-else>Éditeur inconnu</t>
-                                            </li>
-                                            <t t-if="book.isbn">
-                                                <li><strong>ISBN:</strong> {{book.isbn}}</li>
-                                            </t>
-                                            <t t-if="book.publication_date">
-                                                <li><strong>Date de publication:</strong> {{book.publication_date}}</li>
-                                            </t>
-                                            <t t-if="book.loan_date">
-                                                <li><strong>Date d'emprunt:</strong> {{book.loan_date}}</li>
-                                            </t>
-                                            <t t-if="book.return_date">
-                                                <li><strong>Date de retour:</strong> {{book.return_date}}</li>
-                                            </t>
-                                            <t t-if="book.reference">
-                                                <li><strong>Référence:</strong> {{book.reference}}</li>
-                                            </t>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
-    
-    <!-- Template pour les erreurs -->
-    <template id="error_template" name="Error Template">
-        <t t-call="web.layout">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="text-center mt-5">
-                            <h1 class="text-danger">
-                                <i class="fa fa-exclamation-triangle"></i> Erreur
-                            </h1>
-                            <div class="alert alert-danger" role="alert">
-                                <h4 class="alert-heading">Une erreur s'est produite</h4>
-                                <p>{{error_message}}</p>
-                            </div>
-                            <a href="/api/books" class="btn btn-primary">
-                                <i class="fa fa-home"></i> Retour à l'accueil
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
-              
+              action="library.action_modern_books_interface"
+              sequence="25"/>
 </odoo> 

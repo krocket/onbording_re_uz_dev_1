@@ -7,34 +7,75 @@ class LibraryController(http.Controller):
     @http.route('/api/test', type='http', auth='public', methods=['GET'], csrf=False)
     def test_route(self, **kwargs):
         """Route de test simple"""
-        return """
-        <html>
-        <head><title>Test API</title></head>
-        <body>
-            <h1>API de la bibliothèque fonctionne !</h1>
-            <p>Le contrôleur est correctement chargé.</p>
-            <a href="/api/books">Voir tous les livres</a>
-        </body>
-        </html>
-        """
+        try:
+            # Vérifier les modèles disponibles
+            env = request.env
+            models_info = []
+            
+            # Vérifier library.book
+            try:
+                book_model = env.get('library.book')
+                if book_model:
+                    book_count = book_model.search_count([])
+                    models_info.append(f"library.book: {book_count} enregistrements")
+                else:
+                    models_info.append("library.book: NON DISPONIBLE")
+            except Exception as e:
+                models_info.append(f"library.book: ERREUR - {str(e)}")
+            
+            # Vérifier d'autres modèles
+            for model_name in ['library.author', 'library.publisher', 'library.book.category']:
+                try:
+                    model = env.get(model_name)
+                    if model:
+                        count = model.search_count([])
+                        models_info.append(f"{model_name}: {count} enregistrements")
+                    else:
+                        models_info.append(f"{model_name}: NON DISPONIBLE")
+                except Exception as e:
+                    models_info.append(f"{model_name}: ERREUR - {str(e)}")
+            
+            models_html = "<br>".join(models_info)
+            
+            return f"""
+            <html>
+            <head><title>Test API - Diagnostic</title></head>
+            <body>
+                <h1>API de la bibliothèque - Diagnostic</h1>
+                <h2>État des modèles :</h2>
+                <p>{models_html}</p>
+                <hr>
+                <h2>Actions :</h2>
+                <ul>
+                    <li><a href="/api/books">Tester la liste des livres</a></li>
+                    <li><a href="/web#action=library.action_library_book">Ouvrir les livres dans Odoo</a></li>
+                </ul>
+            </body>
+            </html>
+            """
+        except Exception as e:
+            return f"""
+            <html>
+            <head><title>Erreur de diagnostic</title></head>
+            <body>
+                <h1>Erreur lors du diagnostic</h1>
+                <p>{str(e)}</p>
+            </body>
+            </html>
+            """
     
     @http.route('/api/books', type='http', auth='public', methods=['GET'], csrf=False)
     def get_books(self, **kwargs):
         """Récupère tous les livres et affiche une vue HTML"""
         try:
             # Vérifier que le modèle existe
-            if not request.env.get('library.book'):
-                return """
-                <html>
-                <head><title>Erreur</title></head>
-                <body>
-                    <h1>Erreur</h1>
-                    <p>Le modèle library.book n'est pas disponible.</p>
-                </body>
-                </html>
-                """
+            book_model = request.env.get('library.book')
+            if not book_model:
+                return request.render('library.error_template', {
+                    'error_message': 'Le modèle library.book n\'est pas disponible. Vérifiez que le module est installé.'
+                })
             
-            books = request.env['library.book'].sudo().search([('active', '=', True)])
+            books = book_model.sudo().search([('active', '=', True)])
             
             books_data = []
             for book in books:
@@ -65,70 +106,16 @@ class LibraryController(http.Controller):
                     # Ignorer les livres avec des erreurs et continuer
                     continue
             
-            # Rendu simple en HTML pour éviter les problèmes de template
-            html_content = f"""
-            <html>
-            <head>
-                <title>Bibliothèque - Tous les livres</title>
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-            </head>
-            <body>
-                <div class="container mt-4">
-                    <h1>Bibliothèque - Tous les livres</h1>
-                    <p>Nombre de livres: {len(books_data)}</p>
-                    
-                    <form method="GET" action="/api/books/search" class="mb-4">
-                        <div class="input-group">
-                            <input type="text" name="q" class="form-control" placeholder="Rechercher...">
-                            <button class="btn btn-primary" type="submit">Rechercher</button>
-                        </div>
-                    </form>
-                    
-                    <div class="row">
-            """
-            
-            for book in books_data:
-                state_class = 'success' if book['state'] == 'available' else 'warning' if book['state'] == 'borrowed' else 'danger'
-                authors = ', '.join([author['name'] for author in book['authors']]) if book['authors'] else 'Auteur inconnu'
-                category = book['category']['name'] if book['category'] else 'Catégorie inconnue'
-                publisher = book['publisher']['name'] if book['publisher'] else 'Éditeur inconnu'
-                
-                html_content += f"""
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">{book['name']}</h5>
-                                    <span class="badge bg-{state_class} mb-2">{book['state']}</span>
-                                    <p class="card-text"><strong>Auteurs:</strong> {authors}</p>
-                                    <p class="card-text"><strong>Catégorie:</strong> {category}</p>
-                                    <p class="card-text"><strong>Éditeur:</strong> {publisher}</p>
-                                    {f'<p class="card-text"><strong>ISBN:</strong> {book["isbn"]}</p>' if book['isbn'] else ''}
-                                    <a href="/api/books/{book['id']}" class="btn btn-primary btn-sm">Voir détails</a>
-                                </div>
-                            </div>
-                        </div>
-                """
-            
-            html_content += """
-                    </div>
-                </div>
-            </body>
-            </html>
-            """
-            
-            return html_content
+            return request.render('library.books_list_template', {
+                'books': books_data,
+                'title': 'Tous les livres',
+                'count': len(books_data)
+            })
             
         except Exception as e:
-            return f"""
-            <html>
-            <head><title>Erreur</title></head>
-            <body>
-                <h1>Erreur</h1>
-                <p>Erreur lors du chargement des livres: {str(e)}</p>
-                <a href="/api/test">Retour au test</a>
-            </body>
-            </html>
-            """
+            return request.render('library.error_template', {
+                'error_message': f"Erreur lors du chargement des livres: {str(e)}"
+            })
     
     @http.route('/api/books/<int:book_id>', type='http', auth='public', methods=['GET'], csrf=False)
     def get_book(self, book_id, **kwargs):
@@ -137,16 +124,9 @@ class LibraryController(http.Controller):
             book = request.env['library.book'].sudo().browse(book_id)
             
             if not book.exists():
-                return f"""
-                <html>
-                <head><title>Livre non trouvé</title></head>
-                <body>
-                    <h1>Livre non trouvé</h1>
-                    <p>Le livre avec l'ID {book_id} n'existe pas.</p>
-                    <a href="/api/books">Retour à la liste</a>
-                </body>
-                </html>
-                """
+                return request.render('library.error_template', {
+                    'error_message': f'Livre avec l\'ID {book_id} non trouvé'
+                })
             
             try:
                 book_info = {
@@ -173,78 +153,19 @@ class LibraryController(http.Controller):
                     } if book.category_id else None
                 }
                 
-                state_class = 'success' if book_info['state'] == 'available' else 'warning' if book_info['state'] == 'borrowed' else 'danger'
-                authors = ', '.join([author['name'] for author in book_info['authors']]) if book_info['authors'] else 'Auteur inconnu'
-                category = book_info['category']['name'] if book_info['category'] else 'Catégorie inconnue'
-                publisher = book_info['publisher']['name'] if book_info['publisher'] else 'Éditeur inconnu'
-                
-                html_content = f"""
-                <html>
-                <head>
-                    <title>Détails du livre - {book_info['name']}</title>
-                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-                </head>
-                <body>
-                    <div class="container mt-4">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h1>Détails du livre</h1>
-                            <a href="/api/books" class="btn btn-outline-primary">← Retour à la liste</a>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h2 class="card-title">{book_info['name']}</h2>
-                                        <span class="badge bg-{state_class} mb-3">{book_info['state']}</span>
-                                        
-                                        {f'<h5>Description</h5><p>{book_info["description"]}</p>' if book_info['description'] else ''}
-                                        
-                                        <h5>Informations</h5>
-                                        <ul class="list-unstyled">
-                                            <li><strong>Auteurs:</strong> {authors}</li>
-                                            <li><strong>Catégorie:</strong> {category}</li>
-                                            <li><strong>Éditeur:</strong> {publisher}</li>
-                                            {f'<li><strong>ISBN:</strong> {book_info["isbn"]}</li>' if book_info['isbn'] else ''}
-                                            {f'<li><strong>Date de publication:</strong> {book_info["publication_date"]}</li>' if book_info['publication_date'] else ''}
-                                            {f'<li><strong>Date d\'emprunt:</strong> {book_info["loan_date"]}</li>' if book_info['loan_date'] else ''}
-                                            {f'<li><strong>Date de retour:</strong> {book_info["return_date"]}</li>' if book_info['return_date'] else ''}
-                                            {f'<li><strong>Référence:</strong> {book_info["reference"]}</li>' if book_info['reference'] else ''}
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </body>
-                </html>
-                """
-                
-                return html_content
+                return request.render('library.book_detail_template', {
+                    'book': book_info
+                })
                 
             except Exception as book_error:
-                return f"""
-                <html>
-                <head><title>Erreur</title></head>
-                <body>
-                    <h1>Erreur</h1>
-                    <p>Erreur lors du traitement du livre: {str(book_error)}</p>
-                    <a href="/api/books">Retour à la liste</a>
-                </body>
-                </html>
-                """
+                return request.render('library.error_template', {
+                    'error_message': f"Erreur lors du traitement du livre: {str(book_error)}"
+                })
             
         except Exception as e:
-            return f"""
-            <html>
-            <head><title>Erreur</title></head>
-            <body>
-                <h1>Erreur</h1>
-                <p>Erreur lors du chargement du livre: {str(e)}</p>
-                <a href="/api/books">Retour à la liste</a>
-            </body>
-            </html>
-            """
+            return request.render('library.error_template', {
+                'error_message': f"Erreur lors du chargement du livre: {str(e)}"
+            })
     
     @http.route('/api/books/search', type='http', auth='public', methods=['GET'], csrf=False)
     def search_books(self, **kwargs):
@@ -252,16 +173,9 @@ class LibraryController(http.Controller):
         try:
             search_term = kwargs.get('q', '')
             if not search_term:
-                return """
-                <html>
-                <head><title>Erreur</title></head>
-                <body>
-                    <h1>Erreur</h1>
-                    <p>Terme de recherche requis</p>
-                    <a href="/api/books">Retour à la liste</a>
-                </body>
-                </html>
-                """
+                return request.render('library.error_template', {
+                    'error_message': 'Terme de recherche requis'
+                })
             
             domain = [
                 ('active', '=', True),
@@ -292,70 +206,14 @@ class LibraryController(http.Controller):
                     # Ignorer les livres avec des erreurs et continuer
                     continue
             
-            html_content = f"""
-            <html>
-            <head>
-                <title>Résultats de recherche</title>
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-            </head>
-            <body>
-                <div class="container mt-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h1>Résultats de recherche pour "{search_term}"</h1>
-                        <a href="/api/books" class="btn btn-outline-primary">← Retour à la liste</a>
-                    </div>
-                    
-                    <p>Nombre de résultats: {len(books_data)}</p>
-                    
-                    <form method="GET" action="/api/books/search" class="mb-4">
-                        <div class="input-group">
-                            <input type="text" name="q" class="form-control" placeholder="Rechercher..." value="{search_term}">
-                            <button class="btn btn-primary" type="submit">Rechercher</button>
-                        </div>
-                    </form>
-                    
-                    <div class="row">
-            """
-            
-            for book in books_data:
-                state_class = 'success' if book['state'] == 'available' else 'warning' if book['state'] == 'borrowed' else 'danger'
-                authors = ', '.join(book['authors']) if book['authors'] else 'Auteur inconnu'
-                category = book['category'] or 'Catégorie inconnue'
-                publisher = book['publisher'] or 'Éditeur inconnu'
-                
-                html_content += f"""
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">{book['name']}</h5>
-                                    <span class="badge bg-{state_class} mb-2">{book['state']}</span>
-                                    <p class="card-text"><strong>Auteurs:</strong> {authors}</p>
-                                    <p class="card-text"><strong>Catégorie:</strong> {category}</p>
-                                    <p class="card-text"><strong>Éditeur:</strong> {publisher}</p>
-                                    {f'<p class="card-text"><strong>ISBN:</strong> {book["isbn"]}</p>' if book['isbn'] else ''}
-                                    <a href="/api/books/{book['id']}" class="btn btn-primary btn-sm">Voir détails</a>
-                                </div>
-                            </div>
-                        </div>
-                """
-            
-            html_content += """
-                    </div>
-                </div>
-            </body>
-            </html>
-            """
-            
-            return html_content
+            return request.render('library.books_list_template', {
+                'books': books_data,
+                'title': f'Résultats de recherche pour "{search_term}"',
+                'count': len(books_data),
+                'search_term': search_term
+            })
             
         except Exception as e:
-            return f"""
-            <html>
-            <head><title>Erreur</title></head>
-            <body>
-                <h1>Erreur</h1>
-                <p>Erreur lors de la recherche: {str(e)}</p>
-                <a href="/api/books">Retour à la liste</a>
-            </body>
-            </html>
-            """ 
+            return request.render('library.error_template', {
+                'error_message': f"Erreur lors de la recherche: {str(e)}"
+            }) 

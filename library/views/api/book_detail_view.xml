@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue API pour les détails d'un livre -->
+    <template id="book_detail_template" name="Book Detail Template">
+        <t t-call="web.layout">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h1>Détails du livre</h1>
+                            <a href="/api/books" class="btn btn-outline-primary">
+                                <i class="fa fa-arrow-left"></i> Retour à la liste
+                            </a>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <img src="/web/image/library.book/{{book.id}}/image" class="card-img-top" 
+                                         alt="{{book.name}}" 
+                                         onerror="this.src='/web/static/src/img/placeholder.png'">
+                                    <div class="card-body text-center">
+                                        <span class="badge badge-{{'success' if book.state == 'available' else 'warning' if book.state == 'borrowed' else 'danger'}} mb-2">
+                                            {{book.state}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h2 class="card-title">{{book.name}}</h2>
+                                        
+                                        <t t-if="book.description">
+                                            <h5>Description</h5>
+                                            <p class="card-text">{{book.description}}</p>
+                                        </t>
+                                        
+                                        <h5>Informations</h5>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Auteurs:</strong> 
+                                                <t t-if="book.authors and len(book.authors) > 0">
+                                                    <t t-foreach="book.authors" t-as="author">
+                                                        <span t-esc="author.name"/><t t-if="not author_last">, </t>
+                                                    </t>
+                                                </t>
+                                                <t t-else>Auteur inconnu</t>
+                                            </li>
+                                            <li><strong>Catégorie:</strong> 
+                                                <t t-if="book.category">{{book.category.name}}</t>
+                                                <t t-else>Catégorie inconnue</t>
+                                            </li>
+                                            <li><strong>Éditeur:</strong> 
+                                                <t t-if="book.publisher">{{book.publisher.name}}</t>
+                                                <t t-else>Éditeur inconnu</t>
+                                            </li>
+                                            <t t-if="book.isbn">
+                                                <li><strong>ISBN:</strong> {{book.isbn}}</li>
+                                            </t>
+                                            <t t-if="book.publication_date">
+                                                <li><strong>Date de publication:</strong> {{book.publication_date}}</li>
+                                            </t>
+                                            <t t-if="book.loan_date">
+                                                <li><strong>Date d'emprunt:</strong> {{book.loan_date}}</li>
+                                            </t>
+                                            <t t-if="book.return_date">
+                                                <li><strong>Date de retour:</strong> {{book.return_date}}</li>
+                                            </t>
+                                            <t t-if="book.reference">
+                                                <li><strong>Référence:</strong> {{book.reference}}</li>
+                                            </t>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo> 

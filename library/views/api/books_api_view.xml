@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue API pour la liste des livres -->
+    <template id="books_list_template" name="Books List Template">
+        <t t-call="web.layout">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h1><t t-esc="title"/></h1>
+                            <a href="/api/books" class="btn btn-outline-primary">
+                                <i class="fa fa-home"></i> Accueil
+                            </a>
+                        </div>
+                        
+                        <!-- Barre de recherche -->
+                        <div class="row mb-4">
+                            <div class="col-md-6 offset-md-3">
+                                <form method="GET" action="/api/books/search" class="input-group">
+                                    <input type="text" name="q" class="form-control" placeholder="Rechercher un livre, auteur, catégorie..." 
+                                           t-att-value="search_term or ''">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="fa fa-search"></i> Rechercher
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- Statistiques -->
+                        <div class="row mb-3">
+                            <div class="col-12 text-center">
+                                <span class="badge badge-info">Nombre de livres: <t t-esc="count"/></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Liste des livres -->
+                        <div class="row">
+                            <t t-if="books">
+                                <t t-foreach="books" t-as="book">
+                                    <div class="col-md-4 col-lg-3 mb-4">
+                                        <div class="card h-100">
+                                            <div class="position-relative">
+                                                <img src="/web/image/library.book/{{book.id}}/image" class="card-img-top" 
+                                                     style="height: 200px; object-fit: cover;" 
+                                                     alt="{{book.name}}" 
+                                                     onerror="this.src='/web/static/src/img/placeholder.png'">
+                                                <span class="badge badge-{{'success' if book.state == 'available' else 'warning' if book.state == 'borrowed' else 'danger'}} position-absolute" 
+                                                      style="top: 10px; right: 10px;">
+                                                    {{book.state}}
+                                                </span>
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{book.name}}</h5>
+                                                <p class="card-text text-muted small">
+                                                    <strong>Auteurs:</strong> 
+                                                    <t t-if="book.authors and len(book.authors) > 0">
+                                                        <t t-foreach="book.authors" t-as="author">
+                                                            <span t-esc="author.name"/><t t-if="not author_last">, </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else>Auteur inconnu</t>
+                                                </p>
+                                                <p class="card-text text-muted small">
+                                                    <strong>Catégorie:</strong> 
+                                                    <t t-if="book.category">{{book.category.name}}</t>
+                                                    <t t-else>Catégorie inconnue</t>
+                                                </p>
+                                                <p class="card-text text-muted small">
+                                                    <strong>Éditeur:</strong> 
+                                                    <t t-if="book.publisher">{{book.publisher.name}}</t>
+                                                    <t t-else>Éditeur inconnu</t>
+                                                </p>
+                                                <t t-if="book.isbn">
+                                                    <p class="card-text text-muted small">
+                                                        <strong>ISBN:</strong> {{book.isbn}}
+                                                    </p>
+                                                </t>
+                                            </div>
+                                            <div class="card-footer">
+                                                <a href="/api/books/{{book.id}}" class="btn btn-primary btn-sm">
+                                                    Voir détails
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </t>
+                            <t t-else>
+                                <div class="col-12 text-center">
+                                    <p class="text-muted">Aucun livre trouvé</p>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo> 

@@ -1,6 +1,6 @@
-<?xml version="1.0" ?>
-
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Vue formulaire pour les livres -->
     <record id="view_book_form" model="ir.ui.view">
         <field name="name">library.book.form</field>
         <field name="model">library.book</field>
@@ -23,7 +23,7 @@
                             <field name="category_id" widget="many2one_tags"/>
                         </group>
                         <group>
-                            <separator string="Etat"/>
+                            <separator string="État"/>
                             <field name="active"/>
                             <field name="state"/>
                             <field name="loan_date"/>
@@ -35,6 +35,7 @@
         </field>
     </record>
 
+    <!-- Vue liste pour les livres -->
     <record id="view_book_list" model="ir.ui.view">
         <field name="name">library.book.list</field>
         <field name="model">library.book</field>
@@ -51,6 +52,7 @@
         </field>
     </record>
 
+    <!-- Vue recherche pour les livres -->
     <record id="view_book_search" model="ir.ui.view">
         <field name="name">library.book.search</field>
         <field name="model">library.book</field>
@@ -67,6 +69,4 @@
             </search>
         </field>
     </record>
-
-
 </odoo>

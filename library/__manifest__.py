@@ -10,23 +10,36 @@
     'license': 'LGPL-3',
     'depends': [],
     'data': [
-        'views/library_menu.xml',
-        'views/book_view.xml',
-        'views/category_view.xml',
-        'views/author_view.xml',
-        'views/publisher_view.xml',
-        'views/api_book_view.xml',
+        # Menus
+        'views/menus/library_menu.xml',
+        
+        # Vues web classiques
+        'views/web/book_view.xml',
+        'views/web/category_view.xml',
+        'views/web/author_view.xml',
+        'views/web/publisher_view.xml',
+        
+        # Vues API
+        'views/api/books_api_view.xml',
+        'views/api/book_detail_view.xml',
+        'views/api/error_view.xml',
+        'views/api/modern_interface_view.xml',
+        
+        # Données
         'data/categories.xml',
         'data/authors.xml',
         'data/publisher.xml',
         'data/report_actions.xml',
+        
+        # Sécurité
         'security/library_security.xml',
         'security/ir.model.access.csv',
+        
+        # Rapports
         'reports/library_book_report.xml',
         'reports/library_book_detail_report.xml',
     ],
     'installable': True,
     'application': True,
     'auto_install': False,
- 
 }
