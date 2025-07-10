@@ -166,3 +166,42 @@ class LibraryController(http.Controller):
                 'success': False,
                 'error': str(e)
             } 
+
+    @http.route('/api/books/search', type='http', auth='public', methods=['GET'], csrf=False)
+    def search_books(self, **kwargs):
+        """Recherche de livres par titre, auteur, catégorie, éditeur ou ISBN"""
+        try:
+            search_term = kwargs.get('q', '').strip()
+            domain = []
+            if search_term:
+                domain = ['|', '|', '|',
+                    ('name', 'ilike', search_term),
+                    ('author_ids.name', 'ilike', search_term),
+                    ('category_id.name', 'ilike', search_term),
+                    ('publisher_id.name', 'ilike', search_term),
+                    ('isbn', 'ilike', search_term)
+                ]
+            books = request.env['library.book'].sudo().search(domain)
+            books_data = []
+            for book in books:
+                book_info = {
+                    'id': book.id,
+                    'name': book.name or 'Sans titre',
+                    'description': book.description or '',
+                    'state': book.state or 'available',
+                    'isbn': book.isbn or '',
+                    'publisher': book.publisher_id.name if book.publisher_id else None,
+                    'authors': [author.name for author in book.author_ids if author.name],
+                    'category': book.category_id.name if book.category_id else None
+                }
+                books_data.append(book_info)
+            return request.render('library.books_list_template', {
+                'books': books_data,
+                'title': f"Résultats pour : '{search_term}'" if search_term else 'Tous les livres',
+                'count': len(books_data),
+                'search_term': search_term
+            })
+        except Exception as e:
+            return request.render('library.error_template', {
+                'error_message': f"Erreur lors de la recherche : {str(e)}"
+            }) 
