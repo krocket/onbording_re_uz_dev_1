@@ -163,7 +163,7 @@
                 }
             </style>
             
-            <script>
+            <script><![CDATA[
                 $(document).ready(function() {
                     let allBooks = [];
                     let filteredBooks = [];
@@ -226,13 +226,13 @@
                         filteredBooks = allBooks.filter(function(book) {
                             const matchesSearch = !searchTerm || 
                                 book.name.toLowerCase().includes(searchTerm) ||
-                                (book.description &amp;&amp; book.description.toLowerCase().includes(searchTerm)) ||
-                                (book.category &amp;&amp; book.category.toLowerCase().includes(searchTerm)) ||
-                                (book.authors &amp;&amp; book.authors.some(author => author.toLowerCase().includes(searchTerm)));
+                                (book.description && book.description.toLowerCase().includes(searchTerm)) ||
+                                (book.category && book.category.toLowerCase().includes(searchTerm)) ||
+                                (book.authors && book.authors.some(author => author.toLowerCase().includes(searchTerm)));
                             
                             const matchesFilter = currentFilter === 'all' || book.state === currentFilter;
                             
-                            return matchesSearch &amp;&amp; matchesFilter;
+                            return matchesSearch && matchesFilter;
                         });
                         
                         currentPage = 1;
@@ -262,7 +262,7 @@
                         booksToShow.forEach(function(book) {
                             const stateClass = getStateClass(book.state);
                             const stateText = getStateText(book.state);
-                            const authorsText = book.authors &amp;&amp; book.authors.length > 0 ? book.authors.join(', ') : 'Auteur inconnu';
+                            const authorsText = book.authors && book.authors.length > 0 ? book.authors.join(', ') : 'Auteur inconnu';
                             
                             html += `
                                 <div class="col-md-4 col-lg-3 mb-4">
@@ -297,7 +297,7 @@
                             
                             // Pages
                             for (let i = 1; i <= totalPages; i++) {
-                                if (i === 1 || i === totalPages || (i >= currentPage - 2 &amp;&amp; i <= currentPage + 2)) {
+                                if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
                                     paginationHtml += `
                                         <li class="page-item ${i === currentPage ? 'active' : ''}">
                                             <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
@@ -363,7 +363,7 @@
                     
                     // Fonctions globales
                     window.changePage = function(page) {
-                        if (page >= 1 &amp;&amp; page <= Math.ceil(filteredBooks.length / booksPerPage)) {
+                        if (page >= 1 && page <= Math.ceil(filteredBooks.length / booksPerPage)) {
                             currentPage = page;
                             displayBooks();
                         }
@@ -372,7 +372,7 @@
                     window.showBookDetails = function(bookId) {
                         const book = allBooks.find(b => b.id === bookId);
                         if (book) {
-                            const authorsText = book.authors &amp;&amp; book.authors.length > 0 ? book.authors.join(', ') : 'Auteur inconnu';
+                            const authorsText = book.authors && book.authors.length > 0 ? book.authors.join(', ') : 'Auteur inconnu';
                             const stateText = getStateText(book.state);
                             
                             $('#bookModalTitle').text(book.name);
@@ -397,7 +397,7 @@
                         }
                     };
                 });
-            </script>
+            ]]></script>
         </t>
     </template>
     
