@@ -1,6 +1,5 @@
 from odoo import http
 from odoo.http import request
-import json
 
 class LibraryController(http.Controller):
     
@@ -46,6 +45,7 @@ class LibraryController(http.Controller):
                 <h2>Actions :</h2>
                 <ul>
                     <li><a href="/api/books">Tester la liste des livres</a></li>
+                    <li><a href="/api/books-simple">Tester la version simple</a></li>
                     <li><a href="/web#action=library.action_library_book">Ouvrir les livres dans Odoo</a></li>
                 </ul>
             </body>
@@ -62,37 +62,59 @@ class LibraryController(http.Controller):
             </html>
             """
     
+    @http.route('/api/books-simple', type='http', auth='public', methods=['GET'], csrf=False)
+    def get_books_simple(self, **kwargs):
+        """Version très simple pour tester"""
+        try:
+            books = request.env['library.book'].sudo().search([])
+            
+            html_content = """
+            <html>
+            <head><title>Livres - Version Simple</title></head>
+            <body>
+                <h1>Liste des livres (Version Simple)</h1>
+                <p>Nombre de livres trouvés: """ + str(len(books)) + """</p>
+                <ul>
+            """
+            
+            for book in books:
+                html_content += f"<li>{book.name or 'Sans titre'} (ID: {book.id})</li>"
+            
+            html_content += """
+                </ul>
+                <p><a href="/api/test">Retour au diagnostic</a></p>
+            </body>
+            </html>
+            """
+            
+            return html_content
+            
+        except Exception as e:
+            return f"""
+            <html>
+            <head><title>Erreur</title></head>
+            <body>
+                <h1>Erreur</h1>
+                <p>{str(e)}</p>
+                <p><a href="/api/test">Retour au diagnostic</a></p>
+            </body>
+            </html>
+            """
+    
     @http.route('/api/books', type='http', auth='public', methods=['GET'], csrf=False)
     def get_books(self, **kwargs):
         """Récupère tous les livres et affiche une vue HTML"""
         try:
-            # Vérifier que le modèle existe
-            try:
-                book_model = request.env['library.book']
-            except KeyError:
-                return request.render('library.error_template', {
-                    'error_message': 'Le modèle library.book n\'est pas disponible. Vérifiez que le module est installé.'
-                })
-            
-            books = book_model.sudo().search([])
+            books = request.env['library.book'].sudo().search([])
             
             books_data = []
             for book in books:
-                try:
-                    book_info = {
-                        'id': book.id,
-                        'name': book.name or 'Sans titre',
-                        'description': book.description or '',
-                        'state': book.state or 'available',
-                        'isbn': book.isbn or '',
-                        'publisher': book.publisher_id.name if book.publisher_id else None,
-                        'authors': [author.name for author in book.author_ids if author.name],
-                        'category': book.category_id.name if book.category_id else None
-                    }
-                    books_data.append(book_info)
-                except Exception as book_error:
-                    # Ignorer les livres avec des erreurs et continuer
-                    continue
+                book_info = {
+                    'id': book.id,
+                    'name': book.name or 'Sans titre',
+                    'state': book.state or 'available'
+                }
+                books_data.append(book_info)
             
             return request.render('library.books_list_template', {
                 'books': books_data,
@@ -103,85 +125,4 @@ class LibraryController(http.Controller):
         except Exception as e:
             return request.render('library.error_template', {
                 'error_message': f"Erreur lors du chargement des livres: {str(e)}"
-            })
-    
-    @http.route('/api/books/<int:book_id>', type='http', auth='public', methods=['GET'], csrf=False)
-    def get_book(self, book_id, **kwargs):
-        """Récupère un livre spécifique et affiche une vue HTML"""
-        try:
-            book = request.env['library.book'].sudo().browse(book_id)
-            
-            if not book.exists():
-                return request.render('library.error_template', {
-                    'error_message': f'Livre avec l\'ID {book_id} non trouvé'
-                })
-            
-            book_info = {
-                'id': book.id,
-                'name': book.name or 'Sans titre',
-                'description': book.description or '',
-                'state': book.state or 'available',
-                'isbn': book.isbn or '',
-                'publisher': book.publisher_id.name if book.publisher_id else None,
-                'authors': [author.name for author in book.author_ids if author.name],
-                'category': book.category_id.name if book.category_id else None
-            }
-            
-            return request.render('library.book_detail_template', {
-                'book': book_info
-            })
-            
-        except Exception as e:
-            return request.render('library.error_template', {
-                'error_message': f"Erreur lors du chargement du livre: {str(e)}"
-            })
-    
-    @http.route('/api/books/search', type='http', auth='public', methods=['GET'], csrf=False)
-    def search_books(self, **kwargs):
-        """Recherche des livres et affiche une vue HTML"""
-        try:
-            search_term = kwargs.get('q', '')
-            if not search_term:
-                return request.render('library.error_template', {
-                    'error_message': 'Terme de recherche requis'
-                })
-            
-            domain = [
-                '|', '|', '|',
-                ('name', 'ilike', search_term),
-                ('author_ids.name', 'ilike', search_term),
-                ('category_id.name', 'ilike', search_term),
-                ('publisher_id.name', 'ilike', search_term)
-            ]
-            
-            books = request.env['library.book'].sudo().search(domain)
-            
-            books_data = []
-            for book in books:
-                try:
-                    book_info = {
-                        'id': book.id,
-                        'name': book.name or 'Sans titre',
-                        'description': book.description or '',
-                        'state': book.state or 'available',
-                        'isbn': book.isbn or '',
-                        'publisher': book.publisher_id.name if book.publisher_id else None,
-                        'authors': [author.name for author in book.author_ids if author.name],
-                        'category': book.category_id.name if book.category_id else None
-                    }
-                    books_data.append(book_info)
-                except Exception as book_error:
-                    # Ignorer les livres avec des erreurs et continuer
-                    continue
-            
-            return request.render('library.books_list_template', {
-                'books': books_data,
-                'title': f'Résultats de recherche pour "{search_term}"',
-                'count': len(books_data),
-                'search_term': search_term
-            })
-            
-        except Exception as e:
-            return request.render('library.error_template', {
-                'error_message': f"Erreur lors de la recherche: {str(e)}"
             }) 
