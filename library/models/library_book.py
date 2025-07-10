@@ -55,13 +55,8 @@ class LibraryBook(models.Model):
             return True
 
     def action_generate_pdf_report(self):
-        """Génère un rapport PDF de la liste des livres"""
-        # Générer le rapport pour tous les livres ou les livres sélectionnés
-        if self.env.context.get('action_generate_pdf_report') or len(self) > 1:
-            books = self.env['library.book'].search([('active', '=', True)])
-        else:
-            books = self
-        
+        """Génère un rapport PDF pour la sélection ou tous les livres si rien n'est sélectionné"""
+        books = self if self else self.env['library.book'].search([('active', '=', True)])
         return {
             'type': 'ir.actions.report',
             'report_name': 'library.library_book_report',
