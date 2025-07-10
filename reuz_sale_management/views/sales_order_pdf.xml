@@ -5,7 +5,7 @@
         <xpath expr="//td[@name='td_name']" position="inside">
             <br/>
             <span t-if="line.product_id.api_reference" class="text-muted">
-                API Ref: <t t-esc="line.product_id.api_reference"/>
+                API Ref: <t t-field="line.product_id.api_reference"/>
             </span>
         </xpath>
     </template>
