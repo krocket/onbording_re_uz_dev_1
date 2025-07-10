@@ -57,7 +57,7 @@
                                             <div class="card-body">
                                                 <h5 class="card-title text-primary"><i class="fa fa-book"></i> <t t-esc="book['name']"/></h5>
                                                 <p class="card-text text-muted small">
-                                                    <i class="fa fa-user text-info"></i> <strong>Auteurs:</strong> 
+                                                    <i class="fa fa-user text-info"></i> <strong>Auteurs :</strong> 
                                                     <t t-if="book['authors'] and len(book['authors']) > 0">
                                                         <t t-esc="', '.join(book['authors'])"/>
                                                     </t>
