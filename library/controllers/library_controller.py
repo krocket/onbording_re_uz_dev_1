@@ -123,4 +123,46 @@ class LibraryController(http.Controller):
         except Exception as e:
             return request.render('library.error_template', {
                 'error_message': f"Erreur lors du chargement du livre: {str(e)}"
-            }) 
+            })
+    
+    @http.route('/api/books/modern', type='http', auth='public', methods=['GET'], csrf=False)
+    def modern_interface(self, **kwargs):
+        """Affiche l'interface moderne avec JavaScript"""
+        try:
+            return request.render('library.modern_books_interface')
+        except Exception as e:
+            return request.render('library.error_template', {
+                'error_message': f"Erreur lors du chargement de l'interface moderne: {str(e)}"
+            })
+    
+    @http.route('/api/books/data', type='json', auth='public', methods=['POST'], csrf=False)
+    def get_books_data(self, **kwargs):
+        """Récupère les données des livres au format JSON pour l'interface moderne"""
+        try:
+            books = request.env['library.book'].sudo().search([])
+            
+            books_data = []
+            for book in books:
+                book_info = {
+                    'id': book.id,
+                    'name': book.name or 'Sans titre',
+                    'description': book.description or '',
+                    'state': book.state or 'available',
+                    'isbn': book.isbn or '',
+                    'publisher': book.publisher_id.name if book.publisher_id else None,
+                    'authors': [author.name for author in book.author_ids if author.name],
+                    'category': book.category_id.name if book.category_id else None
+                }
+                books_data.append(book_info)
+            
+            return {
+                'success': True,
+                'books': books_data,
+                'total': len(books_data)
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e)
+            } 
