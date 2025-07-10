@@ -4,9 +4,9 @@ import json
 
 class LibraryController(http.Controller):
     
-    @http.route('/api/books', type='http', auth='public', methods=['GET'], csrf=False, website=True)
+    @http.route('/api/books', type='http', auth='public', methods=['GET'], csrf=False)
     def get_books(self, **kwargs):
-        """Récupère tous les livres disponibles"""
+        """Récupère tous les livres et affiche une vue HTML"""
         try:
             books = request.env['library.book'].sudo().search([('active', '=', True)])
             
@@ -35,29 +35,27 @@ class LibraryController(http.Controller):
                 }
                 books_data.append(book_info)
             
-            return json.dumps({
-                'success': True,
-                'data': books_data,
+            return request.render('library.books_list_template', {
+                'books': books_data,
+                'title': 'Tous les livres',
                 'count': len(books_data)
-            }, ensure_ascii=False)
+            })
             
         except Exception as e:
-            return json.dumps({
-                'success': False,
-                'error': str(e)
-            }, ensure_ascii=False)
+            return request.render('library.error_template', {
+                'error_message': str(e)
+            })
     
-    @http.route('/api/books/<int:book_id>', type='http', auth='public', methods=['GET'], csrf=False, website=True)
+    @http.route('/api/books/<int:book_id>', type='http', auth='public', methods=['GET'], csrf=False)
     def get_book(self, book_id, **kwargs):
-        """Récupère un livre spécifique par son ID"""
+        """Récupère un livre spécifique et affiche une vue HTML"""
         try:
             book = request.env['library.book'].sudo().browse(book_id)
             
             if not book.exists():
-                return json.dumps({
-                    'success': False,
-                    'error': 'Livre non trouvé'
-                }, ensure_ascii=False)
+                return request.render('library.error_template', {
+                    'error_message': 'Livre non trouvé'
+                })
             
             book_info = {
                 'id': book.id,
@@ -83,27 +81,24 @@ class LibraryController(http.Controller):
                 } if book.category_id else None
             }
             
-            return json.dumps({
-                'success': True,
-                'data': book_info
-            }, ensure_ascii=False)
+            return request.render('library.book_detail_template', {
+                'book': book_info
+            })
             
         except Exception as e:
-            return json.dumps({
-                'success': False,
-                'error': str(e)
-            }, ensure_ascii=False)
+            return request.render('library.error_template', {
+                'error_message': str(e)
+            })
     
-    @http.route('/api/books/search', type='http', auth='public', methods=['GET'], csrf=False, website=True)
+    @http.route('/api/books/search', type='http', auth='public', methods=['GET'], csrf=False)
     def search_books(self, **kwargs):
-        """Recherche des livres par titre, auteur ou catégorie"""
+        """Recherche des livres et affiche une vue HTML"""
         try:
             search_term = kwargs.get('q', '')
             if not search_term:
-                return json.dumps({
-                    'success': False,
-                    'error': 'Terme de recherche requis'
-                }, ensure_ascii=False)
+                return request.render('library.error_template', {
+                    'error_message': 'Terme de recherche requis'
+                })
             
             domain = [
                 ('active', '=', True),
@@ -130,14 +125,14 @@ class LibraryController(http.Controller):
                 }
                 books_data.append(book_info)
             
-            return json.dumps({
-                'success': True,
-                'data': books_data,
-                'count': len(books_data)
-            }, ensure_ascii=False)
+            return request.render('library.books_list_template', {
+                'books': books_data,
+                'title': f'Résultats de recherche pour "{search_term}"',
+                'count': len(books_data),
+                'search_term': search_term
+            })
             
         except Exception as e:
-            return json.dumps({
-                'success': False,
-                'error': str(e)
-            }, ensure_ascii=False) 
+            return request.render('library.error_template', {
+                'error_message': str(e)
+            }) 
