@@ -18,7 +18,7 @@
                             <div class="col-md-6 offset-md-3">
                                 <form method="GET" action="/api/books/search" class="input-group">
                                     <input type="text" name="q" class="form-control" placeholder="Rechercher un livre, auteur, catégorie..." 
-                                           t-att-value="search_term or ''">
+                                           t-att-value="search_term or ''"/>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">
                                             <i class="fa fa-search"></i> Rechercher
