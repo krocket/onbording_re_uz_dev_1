@@ -3,6 +3,10 @@
     <!-- Vue API pour la liste des livres -->
     <template id="books_list_template" name="Books List Template">
         <t t-call="web.layout">
+            <t t-set="head">
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"/>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+            </t>
             <div class="container-fluid py-4" style="background: #f8f9fa; min-height: 100vh;">
                 <div class="row">
                     <div class="col-12">
