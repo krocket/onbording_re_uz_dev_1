@@ -114,17 +114,5 @@
                 </t>
             </t>
         </template>
-
-        <!-- Action pour le rapport -->
-        <record id="action_library_book_report" model="ir.actions.report">
-            <field name="name">Rapport des Livres</field>
-            <field name="model">library.book</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">library.library_book_report</field>
-            <field name="report_file">library.library_book_report</field>
-            <field name="binding_model_id" ref="model_library_book"/>
-            <field name="binding_type">report</field>
-            <field name="binding_view_types">list</field>
-        </record>
     </data>
 </odoo> 
