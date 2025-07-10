@@ -44,15 +44,15 @@
                                                         <span t-esc="author.name"/><t t-if="idx != len(book.authors) - 1">, </t>
                                                     </t>
                                                 </t>
-                                                <t t-else>Auteur inconnu</t>
+                                                <t t-else="">Auteur inconnu</t>
                                             </li>
                                             <li><strong>Catégorie:</strong> 
                                                 <t t-if="book.category"><t t-esc="book.category.name"/></t>
-                                                <t t-else>Catégorie inconnue</t>
+                                                <t t-else="">Catégorie inconnue</t>
                                             </li>
                                             <li><strong>Éditeur:</strong> 
                                                 <t t-if="book.publisher"><t t-esc="book.publisher.name"/></t>
-                                                <t t-else>Éditeur inconnu</t>
+                                                <t t-else="">Éditeur inconnu</t>
                                             </li>
                                             <t t-if="book.isbn">
                                                 <li><strong>ISBN:</strong> <t t-esc="book.isbn"/></li>
