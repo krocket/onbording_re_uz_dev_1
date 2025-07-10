@@ -13,19 +13,12 @@
                             </a>
                         </div>
 
-                        <div t-esc="book"></div>
-                        <div t-esc="book[0].name"></div>
-                
-<!--                         
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="card">
-                                    <img t-att-src="'/web/image/library.book/' + str(book.id) + '/image'" class="card-img-top" 
-                                         t-att-alt="book.name" 
-                                         onerror="this.src='/web/static/src/img/placeholder.png'"/>
                                     <div class="card-body text-center">
-                                        <span t-att-class="'badge badge-' + ('success' if book.state == 'available' else 'warning' if book.state == 'borrowed' else 'danger') + ' mb-2'">
-                                            <t t-esc="book.state"/>
+                                        <span t-att-class="'badge badge-' + ('success' if book['state'] == 'available' else 'warning' if book['state'] == 'borrowed' else 'danger') + ' mb-2'">
+                                            <t t-esc="book['state']"/>
                                         </span>
                                     </div>
                                 </div>
@@ -33,51 +26,39 @@
                             <div class="col-md-8">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h2 class="card-title"><t t-esc="book.name"/></h2>
+                                        <h2 class="card-title"><t t-esc="book['name']"/></h2>
                                         
-                                        <t t-if="book.description">
+                                        <t t-if="book['description']">
                                             <h5>Description</h5>
-                                            <p class="card-text"><t t-esc="book.description"/></p>
+                                            <p class="card-text"><t t-esc="book['description']"/></p>
                                         </t>
                                         
                                         <h5>Informations</h5>
                                         <ul class="list-unstyled">
                                             <li><strong>Auteurs:</strong> 
-                                                <t t-if="book.authors and len(book.authors) > 0">
-                                                    <t t-foreach="book.authors" t-as="author" t-foreach-index="idx">
-                                                        <span t-esc="author.name"/><t t-if="idx != len(book.authors) - 1">, </t>
+                                                <t t-if="book['authors'] and len(book['authors']) > 0">
+                                                    <t t-foreach="book['authors']" t-as="author" t-foreach-index="idx">
+                                                        <span t-esc="author"/><t t-if="idx != len(book['authors']) - 1">, </t>
                                                     </t>
                                                 </t>
                                                 <t t-else="">Auteur inconnu</t>
                                             </li>
                                             <li><strong>Catégorie:</strong> 
-                                                <t t-if="book.category"><t t-esc="book.category.name"/></t>
+                                                <t t-if="book['category']"><t t-esc="book['category']"/></t>
                                                 <t t-else="">Catégorie inconnue</t>
                                             </li>
                                             <li><strong>Éditeur:</strong> 
-                                                <t t-if="book.publisher"><t t-esc="book.publisher.name"/></t>
+                                                <t t-if="book['publisher']"><t t-esc="book['publisher']"/></t>
                                                 <t t-else="">Éditeur inconnu</t>
                                             </li>
-                                            <t t-if="book.isbn">
-                                                <li><strong>ISBN:</strong> <t t-esc="book.isbn"/></li>
-                                            </t>
-                                            <t t-if="book.publication_date">
-                                                <li><strong>Date de publication:</strong> <t t-esc="book.publication_date"/></li>
-                                            </t>
-                                            <t t-if="book.loan_date">
-                                                <li><strong>Date d'emprunt:</strong> <t t-esc="book.loan_date"/></li>
-                                            </t>
-                                            <t t-if="book.return_date">
-                                                <li><strong>Date de retour:</strong> <t t-esc="book.return_date"/></li>
-                                            </t>
-                                            <t t-if="book.reference">
-                                                <li><strong>Référence:</strong> <t t-esc="book.reference"/></li>
+                                            <t t-if="book['isbn']">
+                                                <li><strong>ISBN:</strong> <t t-esc="book['isbn']"/></li>
                                             </t>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
