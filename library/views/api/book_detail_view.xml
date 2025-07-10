@@ -14,7 +14,8 @@
                         </div>
 
                         <div t-esc="book"></div>
-                        <div t-esc="book.name"></div>
+                        <div t-esc="book[0].name"></div>
+                
 <!--                         
                         <div class="row">
                             <div class="col-md-4">
