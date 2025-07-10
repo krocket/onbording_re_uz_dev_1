@@ -4,113 +4,111 @@
         <!-- Template pour le rapport PDF -->
         <template id="library_book_report">
             <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="web.external_layout">
-                        <div class="page">
-                            <!-- En-tête du rapport -->
-                            <div class="row">
-                                <div class="col-12 text-center">
-                                    <h1>Catalogue de la Bibliothèque</h1>
-                                    <p>Rapport généré le <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y à %H:%M')"/></p>
-                                </div>
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- En-tête du rapport -->
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h1>Catalogue de la Bibliothèque</h1>
+                                <p>Rapport généré le <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y à %H:%M')"/></p>
                             </div>
+                        </div>
 
-                            <!-- Statistiques -->
-                            <div class="row mb-4">
-                                <div class="col-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h4>Statistiques</h4>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-3 text-center">
-                                                    <h5><t t-esc="total_books"/></h5>
-                                                    <small>Total des livres</small>
-                                                </div>
-                                                <div class="col-3 text-center">
-                                                    <h5><t t-esc="available_books"/></h5>
-                                                    <small>Disponibles</small>
-                                                </div>
-                                                <div class="col-3 text-center">
-                                                    <h5><t t-esc="borrowed_books"/></h5>
-                                                    <small>Empruntés</small>
-                                                </div>
-                                                <div class="col-3 text-center">
-                                                    <h5><t t-esc="lost_books"/></h5>
-                                                    <small>Perdus</small>
-                                                </div>
+                        <!-- Statistiques -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4>Statistiques</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3 text-center">
+                                                <h5><t t-esc="total_books"/></h5>
+                                                <small>Total des livres</small>
+                                            </div>
+                                            <div class="col-3 text-center">
+                                                <h5><t t-esc="available_books"/></h5>
+                                                <small>Disponibles</small>
+                                            </div>
+                                            <div class="col-3 text-center">
+                                                <h5><t t-esc="borrowed_books"/></h5>
+                                                <small>Empruntés</small>
+                                            </div>
+                                            <div class="col-3 text-center">
+                                                <h5><t t-esc="lost_books"/></h5>
+                                                <small>Perdus</small>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Liste des livres -->
-                            <div class="row">
-                                <div class="col-12">
-                                    <h3>Liste des Livres</h3>
-                                    <table class="table table-striped table-bordered">
-                                        <thead>
+                        <!-- Liste des livres -->
+                        <div class="row">
+                            <div class="col-12">
+                                <h3>Liste des Livres</h3>
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Titre</th>
+                                            <th>ISBN</th>
+                                            <th>Auteurs</th>
+                                            <th>Éditeur</th>
+                                            <th>Catégorie</th>
+                                            <th>Date de publication</th>
+                                            <th>État</th>
+                                            <th>Référence</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="books_data" t-as="book">
                                             <tr>
-                                                <th>Titre</th>
-                                                <th>ISBN</th>
-                                                <th>Auteurs</th>
-                                                <th>Éditeur</th>
-                                                <th>Catégorie</th>
-                                                <th>Date de publication</th>
-                                                <th>État</th>
-                                                <th>Référence</th>
+                                                <td><strong><t t-esc="book['name']"/></strong></td>
+                                                <td><t t-esc="book['isbn']"/></td>
+                                                <td><t t-esc="book['authors']"/></td>
+                                                <td><t t-esc="book['publisher']"/></td>
+                                                <td><t t-esc="book['category']"/></td>
+                                                <td><t t-esc="book['publication_date']"/></td>
+                                                <td>
+                                                    <span t-if="book['state'] == 'Available'" class="badge badge-success">
+                                                        Disponible
+                                                    </span>
+                                                    <span t-elif="book['state'] == 'Borrowed'" class="badge badge-warning">
+                                                        Emprunté
+                                                    </span>
+                                                    <span t-elif="book['state'] == 'Lost'" class="badge badge-danger">
+                                                        Perdu
+                                                    </span>
+                                                    <span t-else="" class="badge badge-secondary">
+                                                        <t t-esc="book['state']"/>
+                                                    </span>
+                                                </td>
+                                                <td><t t-esc="book['reference']"/></td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            <t t-foreach="books_data" t-as="book">
-                                                <tr>
-                                                    <td><strong><t t-esc="book['name']"/></strong></td>
-                                                    <td><t t-esc="book['isbn']"/></td>
-                                                    <td><t t-esc="book['authors']"/></td>
-                                                    <td><t t-esc="book['publisher']"/></td>
-                                                    <td><t t-esc="book['category']"/></td>
-                                                    <td><t t-esc="book['publication_date']"/></td>
-                                                    <td>
-                                                        <span t-if="book['state'] == 'Available'" class="badge badge-success">
-                                                            Disponible
-                                                        </span>
-                                                        <span t-elif="book['state'] == 'Borrowed'" class="badge badge-warning">
-                                                            Emprunté
-                                                        </span>
-                                                        <span t-elif="book['state'] == 'Lost'" class="badge badge-danger">
-                                                            Perdu
-                                                        </span>
-                                                        <span t-else="" class="badge badge-secondary">
-                                                            <t t-esc="book['state']"/>
-                                                        </span>
-                                                    </td>
-                                                    <td><t t-esc="book['reference']"/></td>
-                                                </tr>
-                                                <tr t-if="book['description']">
-                                                    <td colspan="8">
-                                                        <small>
-                                                            <strong>Description :</strong> <t t-esc="book['description']"/>
-                                                        </small>
-                                                    </td>
-                                                </tr>
-                                            </t>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- Pied de page -->
-                            <div class="row mt-4">
-                                <div class="col-12 text-center">
-                                    <p>
-                                        Ce rapport a été généré automatiquement par le système de gestion de bibliothèque.
-                                    </p>
-                                </div>
+                                            <tr t-if="book['description']">
+                                                <td colspan="8">
+                                                    <small>
+                                                        <strong>Description :</strong> <t t-esc="book['description']"/>
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                    </t>
+
+                        <!-- Pied de page -->
+                        <div class="row mt-4">
+                            <div class="col-12 text-center">
+                                <p>
+                                    Ce rapport a été généré automatiquement par le système de gestion de bibliothèque.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </t>
             </t>
         </template>
