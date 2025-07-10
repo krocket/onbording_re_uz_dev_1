@@ -54,27 +54,9 @@
                                             <div class="card-body">
                                                 <h5 class="card-title"><t t-esc="book.name"/></h5>
                                                 <p class="card-text text-muted small">
-                                                    <strong>Auteurs:</strong> 
-                                                    <t t-if="book.authors and len(book.authors) > 0">
-                                                        <t t-esc="', '.join(book.authors)"/>
-                                                    </t>
-                                                    <t t-else="">Auteur inconnu</t>
+                                                    <strong>État:</strong> <t t-esc="book.state"/>
                                                 </p>
-                                                <p class="card-text text-muted small">
-                                                    <strong>Catégorie:</strong> 
-                                                    <t t-if="book.category"><t t-esc="book.category"/></t>
-                                                    <t t-else="">Catégorie inconnue</t>
-                                                </p>
-                                                <p class="card-text text-muted small">
-                                                    <strong>Éditeur:</strong> 
-                                                    <t t-if="book.publisher"><t t-esc="book.publisher"/></t>
-                                                    <t t-else="">Éditeur inconnu</t>
-                                                </p>
-                                                <t t-if="book.isbn">
-                                                    <p class="card-text text-muted small">
-                                                        <strong>ISBN:</strong> <t t-esc="book.isbn"/>
-                                                    </p>
-                                                </t>
+
                                             </div>
                                             <div class="card-footer">
                                                 <a t-att-href="'/api/books/' + str(book.id)" class="btn btn-primary btn-sm">
