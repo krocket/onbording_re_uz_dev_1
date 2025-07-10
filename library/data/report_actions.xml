@@ -3,7 +3,7 @@
     <data>
         <!-- Action de rapport pour la roue dentée de la liste (sélection ou tout) -->
         <record id="action_library_book_report_list" model="ir.actions.report">
-            <field name="name">Générer Rapport PDF</field>
+            <field name="name">Générer Catalogue PDF</field>
             <field name="model">library.book</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">library.library_book_report</field>
@@ -13,13 +13,13 @@
             <field name="binding_view_types">list</field>
         </record>
 
-        <!-- Action de rapport pour la roue dentée du formulaire (un livre) -->
-        <record id="action_library_book_report_form" model="ir.actions.report">
-            <field name="name">Générer Rapport PDF</field>
+        <!-- Action de rapport pour la roue dentée du formulaire (un livre, fiche détail) -->
+        <record id="action_library_book_detail_report_form" model="ir.actions.report">
+            <field name="name">Générer Fiche PDF</field>
             <field name="model">library.book</field>
             <field name="report_type">qweb-pdf</field>
-            <field name="report_name">library.library_book_report</field>
-            <field name="report_file">library.library_book_report</field>
+            <field name="report_name">library.library_book_detail_report</field>
+            <field name="report_file">library.library_book_detail_report</field>
             <field name="binding_model_id" ref="model_library_book"/>
             <field name="binding_type">report</field>
             <field name="binding_view_types">form</field>

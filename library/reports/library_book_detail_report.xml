@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="library_book_detail_report">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-3">
+                                <img t-if="docs[0].image" t-att-src="'data:image/png;base64,%s' % docs[0].image.decode()" style="max-width: 100%; border-radius: 8px; border: 1px solid #ccc;"/>
+                            </div>
+                            <div class="col-9">
+                                <h1><t t-esc="docs[0].name"/></h1>
+                                <p><strong>Auteur(s) :</strong> <t t-esc="', '.join([a.name for a in docs[0].author_ids]) if docs[0].author_ids else 'Non spécifié'"/></p>
+                                <p><strong>Éditeur :</strong> <t t-esc="docs[0].publisher_id.name if docs[0].publisher_id else 'Non spécifié'"/></p>
+                                <p><strong>Catégorie :</strong> <t t-esc="docs[0].category_id.name if docs[0].category_id else 'Non spécifié'"/></p>
+                                <p><strong>Date de publication :</strong> <t t-esc="docs[0].publication_date.strftime('%d/%m/%Y') if docs[0].publication_date else 'Non spécifié'"/></p>
+                                <p><strong>ISBN :</strong> <t t-esc="docs[0].isbn or 'Non spécifié'"/></p>
+                                <p><strong>État :</strong> <t t-esc="dict(docs[0]._fields['state'].selection).get(docs[0].state, docs[0].state)"/></p>
+                                <p><strong>Référence :</strong> <t t-esc="docs[0].reference or 'Non spécifié'"/></p>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h4>Description</h4>
+                                <p><t t-esc="docs[0].description or 'Aucune description.'"/></p>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12 text-center">
+                                <p class="text-muted">
+                                    Ce rapport a été généré automatiquement par le système de gestion de bibliothèque.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo> 

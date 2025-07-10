@@ -22,6 +22,7 @@
         'security/library_security.xml',
         'security/ir.model.access.csv',
         'reports/library_book_report.xml',
+        'reports/library_book_detail_report.xml',
     ],
     'installable': True,
     'application': True,
