@@ -74,7 +74,7 @@ class LibraryController(http.Controller):
                     'error_message': 'Le modèle library.book n\'est pas disponible. Vérifiez que le module est installé.'
                 })
             
-            books = book_model.sudo().search([('active', '=', True)])
+            books = book_model.sudo().search([])
             
             books_data = []
             for book in books:
@@ -83,32 +83,16 @@ class LibraryController(http.Controller):
                         'id': book.id,
                         'name': book.name or 'Sans titre',
                         'description': book.description or '',
-                        'publication_date': book.publication_date.strftime('%Y-%m-%d') if book.publication_date else None,
-                        'isbn': book.isbn or '',
                         'state': book.state or 'available',
-                        'reference': book.reference or '',
-                        'publisher': {
-                            'id': book.publisher_id.id,
-                            'name': book.publisher_id.name
-                        } if book.publisher_id else None,
-                        'authors': [{
-                            'id': author.id,
-                            'name': author.name
-                        } for author in book.author_ids if author.name],
-                        'category': {
-                            'id': book.category_id.id,
-                            'name': book.category_id.name
-                        } if book.category_id else None
+                        'isbn': book.isbn or '',
+                        'publisher': book.publisher_id.name if book.publisher_id else None,
+                        'authors': [author.name for author in book.author_ids if author.name],
+                        'category': book.category_id.name if book.category_id else None
                     }
                     books_data.append(book_info)
                 except Exception as book_error:
                     # Ignorer les livres avec des erreurs et continuer
                     continue
-            
-            # Debug: afficher les données avant le rendu
-            print(f"DEBUG: {len(books_data)} livres trouvés")
-            for i, book in enumerate(books_data[:3]):  # Afficher les 3 premiers
-                print(f"DEBUG: Livre {i+1}: {book.get('name', 'Sans nom')}")
             
             return request.render('library.books_list_template', {
                 'books': books_data,
@@ -132,39 +116,20 @@ class LibraryController(http.Controller):
                     'error_message': f'Livre avec l\'ID {book_id} non trouvé'
                 })
             
-            try:
-                book_info = {
-                    'id': book.id,
-                    'name': book.name or 'Sans titre',
-                    'description': book.description or '',
-                    'publication_date': book.publication_date.strftime('%Y-%m-%d') if book.publication_date else None,
-                    'isbn': book.isbn or '',
-                    'state': book.state or 'available',
-                    'loan_date': book.loan_date.strftime('%Y-%m-%d') if book.loan_date else None,
-                    'return_date': book.return_date.strftime('%Y-%m-%d') if book.return_date else None,
-                    'reference': book.reference or '',
-                    'publisher': {
-                        'id': book.publisher_id.id,
-                        'name': book.publisher_id.name
-                    } if book.publisher_id else None,
-                    'authors': [{
-                        'id': author.id,
-                        'name': author.name
-                    } for author in book.author_ids if author.name],
-                    'category': {
-                        'id': book.category_id.id,
-                        'name': book.category_id.name
-                    } if book.category_id else None
-                }
-                
-                return request.render('library.book_detail_template', {
-                    'book': book_info
-                })
-                
-            except Exception as book_error:
-                return request.render('library.error_template', {
-                    'error_message': f"Erreur lors du traitement du livre: {str(book_error)}"
-                })
+            book_info = {
+                'id': book.id,
+                'name': book.name or 'Sans titre',
+                'description': book.description or '',
+                'state': book.state or 'available',
+                'isbn': book.isbn or '',
+                'publisher': book.publisher_id.name if book.publisher_id else None,
+                'authors': [author.name for author in book.author_ids if author.name],
+                'category': book.category_id.name if book.category_id else None
+            }
+            
+            return request.render('library.book_detail_template', {
+                'book': book_info
+            })
             
         except Exception as e:
             return request.render('library.error_template', {
@@ -182,7 +147,6 @@ class LibraryController(http.Controller):
                 })
             
             domain = [
-                ('active', '=', True),
                 '|', '|', '|',
                 ('name', 'ilike', search_term),
                 ('author_ids.name', 'ilike', search_term),
