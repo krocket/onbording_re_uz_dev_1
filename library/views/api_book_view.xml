@@ -442,7 +442,7 @@
                                                 <h5 class="card-title">{{book.name}}</h5>
                                                 <p class="card-text text-muted small">
                                                     <strong>Auteurs:</strong> 
-                                                    <t t-if="book.authors">
+                                                    <t t-if="book.authors and len(book.authors) > 0">
                                                         <t t-foreach="book.authors" t-as="author">
                                                             <span t-esc="author.name"/><t t-if="not author_last">, </t>
                                                         </t>
@@ -525,7 +525,7 @@
                                         <h5>Informations</h5>
                                         <ul class="list-unstyled">
                                             <li><strong>Auteurs:</strong> 
-                                                <t t-if="book.authors">
+                                                <t t-if="book.authors and len(book.authors) > 0">
                                                     <t t-foreach="book.authors" t-as="author">
                                                         <span t-esc="author.name"/><t t-if="not author_last">, </t>
                                                     </t>
