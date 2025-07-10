@@ -4,6 +4,7 @@
     <template id="sales_order_pdf_template"  inherit_id="sale.report_saleorder_document">
         <xpath expr="//td[@name='td_name']" position="inside">
             <br/>
+            <t t-esc="line">
             <span t-if="line.product_id.api_reference" class="text-muted">
                 API Ref: <t t-esc="line.product_id.api_reference"/>
             </span>
